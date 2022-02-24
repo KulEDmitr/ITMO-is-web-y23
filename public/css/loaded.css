@@ -1,0 +1,91 @@
+button {
+    outline: none;
+    border: none;
+    height: 30px;
+    font-size: 20px;
+    border-radius: 5px;
+    margin: 0 auto;
+    background-color: var(--dark_yellow);
+    color: #FFFFFF;
+    text-transform: uppercase;
+    margin: 10px auto;
+}
+
+button:hover {
+    background-color: var(--light_red);
+    cursor: pointer;
+}
+
+button:active {
+    top: 3px;
+    box-shadow: 0 2px 0 var(--black);
+}
+
+#loaded__items__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    text-align: center;
+    margin: 40px 0;
+    align-items: center;
+}
+
+@media (max-width: 1000px) {
+    #loaded__items__wrapper  {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    #loaded__items__wrapper  {
+        grid-template-columns: 1fr;
+    }
+}
+
+.preloader {
+    position: fixed;
+	bottom: 20%;
+    margin: 0 auto;
+
+    width: 70px;
+    height: 70px;
+    background: url('../gifs/Spinner-2.gif');
+    background-repeat: no-repeat;
+    z-index: 10;
+}
+
+.loading .preloader{
+    display: initial;
+}
+
+.loading #down__button {
+    opacity: 0;
+}
+
+.loaded .preloader {
+    display: none;
+}
+
+.loaded #down__button {
+    opacity: 1;
+}
+
+.loaded__item {
+    background-color: var(--dark_background);
+    display: inline-block;
+    max-width: 300px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto 50px;
+}
+
+#loaded__item__image {
+    border-radius: 10px;
+    width: 90%;
+}
+
+#loaded__item__description {
+    text-align: center;
+    height: 40px;
+    word-wrap: break-word;
+}
