@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="personal site, portfolio, web">
+    <meta name="description" content="personal site for ITMO 2021 Web-programming course">
+    <meta name="viewpoint" content="width=device-width">
+
+    <script src="scripts/for_all_pages.js"></script>
+
+    <link rel="stylesheet" href ="css/styles.css">
+    <link rel="stylesheet" href ="css/loaded.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@400;600;700&family=Raleway:wght@400;600;700&display=swap">
+    
+    <title>KulED</title>
+</head>    
+
+<body class="additional__page">
+    <header class="header__fixed">
+        <div class="container">
+            <div class="header__menu">
+                <div class="header__logo">
+                    <img src="images/header-logo.jpg" alt="">
+                </div>
+    
+                <nav class="nav">
+                    <a class="link nav__link" href="index.html">Главная</a>
+                    <a class="link nav__link" href="different.html">Разное</a>
+                    <a class="link nav__link" href="physics.html">Физика</a>
+                    <a class="link nav__link" href="galery.html">Галерея</a>
+                    <a class="link nav__link" href="operation.html">Операция Ы</a>
+                    <a class="link nav__link" href="form.html">Форма</a>
+                    <a class="link nav__link" href="loaded_pictures.html">Запрос</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <section class="section">
+            <div class="inner">
+                <div class="section__header" id="galery">
+                    <h2 class="section__title">Галерея (автоматическая)</h2>
+                </div>
+
+                <div class="gallery">
+                    <button id="clear__button" class="shadow" type="submit">Очистить страницу</button>
+                    
+                    <div id="loaded__items__wrapper">
+                        <template id ="template__loaded__item">
+                            <div class="loaded__item" id ="loaded__item">
+                                <img id="loaded__item__image" alt="" >
+                                <p id="loaded__item__description">Описание</p>
+                            </div>
+                        </template>
+                    </div>
+
+                    <button id="down__button" class="shadow" type="submit">Показать больше</button>
+                    <div class="preloader"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="column">
+        <p>pages for <strong>ITMO Web-programming course</strong></p>
+        <div>
+            &copy; <time datetime="2021-12-22">2021</time> <a class="link footer__link" href="https://www.instagram.com/nook_of_madness/" alt="">madness.inc</a>
+        </div>
+
+        <div class="footer__time">
+            <span id="load__time"></span>
+        </div>
+    </footer>
+
+    <script src="scripts/load_data.js"></script>
+</body>
+</html>

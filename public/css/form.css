@@ -1,0 +1,163 @@
+.form__column {
+    width: 50%;
+    font-size: 20px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+@media (max-width: 1000px) {
+    .form__column {
+        width: 70%;
+    }
+}
+
+@media (max-width: 750px) {
+    .form__column {
+        width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    .form__column {
+        width: 90%;
+    }
+}
+
+@media (max-width: 500px) {
+    .form__column {
+        width: 100%;
+    }
+}
+
+.form {
+    color: var(--dark_text);
+    padding: 20px;
+    background: var(--shadow_gray);
+    border-radius: 7px;
+}
+
+#todo__form {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1%;
+    margin-bottom: 30px;
+}
+
+.form__item {
+    flex-grow: 1;
+}
+
+#task__text {
+    height: 50px;
+    padding: 5px 20px;
+    border-radius: 7px;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+#task__text:focus {
+    box-shadow: 0 0 10px var(--light_yellow);
+}
+
+#task__text.wrong {
+    box-shadow: 0 0 10px var(--light_red);
+}
+
+#add {
+    height: 50px;
+    text-transform: uppercase;
+    max-width: 100px;
+    border-radius: 7px;
+}
+
+#add:hover {
+    background-color: var(--light_yellow);
+    cursor: pointer;
+}
+
+#add:active {
+    top: 3px;
+    box-shadow: 0 2px 0 var(--black);
+}
+
+.form__result {
+    padding: 0;
+    color: var(--light_background);
+}
+
+.todo__item {
+    display:flex;
+    min-height: 60px;
+    border: 2px solid var(--border_gray);
+    border-radius: 7px;
+    padding: 10px 20px;
+    background-color: var(--light_blue);
+    margin-bottom: 20px;
+}
+
+.todo__item.checked{
+    background-color: darkslategray;
+    opacity: 0.4;
+}
+
+.todo__item.checked .task__text {
+    text-decoration: line-through;
+}
+
+.todo__item.delition{
+    animation: opacity 1s ease-in-out;
+}
+
+.task__text {
+    width: 80%;
+    display:flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.buttons {
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2%;
+}
+
+button {
+    outline: none;
+    border: none;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.button__delete {
+    background-color: var(--dark_yellow);
+    color: #FFFFFF;
+}
+
+.button__delete:hover {
+    background-color: var(--light_red);
+    cursor: pointer;
+}
+
+.button__delete:active {
+    top: 3px;
+    box-shadow: 0 2px 0 var(--black);
+}
+
+.checkbox__done {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+
+@keyframes opacity {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
