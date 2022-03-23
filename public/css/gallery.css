@@ -4,11 +4,6 @@
     padding: 30px 0 70px 0;
 }
 
-.image__slider__wrapper {
-    height: 90vh;
-    max-height: 900px;
-}
-
 /*  Скролл-бар  */
 .image__slider .swiper-scrollbar-drag {
     cursor: pointer;
