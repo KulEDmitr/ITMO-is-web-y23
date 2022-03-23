@@ -1,0 +1,37 @@
+<section class="section">
+    <div class="container">
+        <div class="column form__column">
+            <div class="section__header" id="todo__adding">
+                <h2 class="section__title">ToDoList</h2>
+            </div>
+
+            <form class="form" id="todo__form">
+                <div class="form__item">
+                    <input type="text" id="task__text" name="name">
+                </div>
+
+                <div class="form__button">
+                    <button type="submit" id="add">Добавить задачу</button>
+                </div>
+            </form>
+
+            <div class="section__header" id="todo__list">
+                <h2 class="section__title">Задачи на undefine дней</h2>
+            </div>
+
+            <div class="form__result">
+                <template id ="template__todo__item">
+                    <div class="todo__item" id ="todo__item">
+                        <div class ="task__text" id="task__text">Текст задачи</div>
+                        <div class ="buttons">
+                            <input type="checkbox" class="checkbox__done" id="checkbox__done">
+                            <button type="submit" id = "button__delete" class="button__delete button">Delete</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/scripts/form.js"></script>
