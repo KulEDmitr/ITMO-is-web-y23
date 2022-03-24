@@ -2,9 +2,7 @@ let start_time = new Date().getTime();
 
 window.onload = () => {
   document.getElementById('load__time').textContent =
-    'Page load time is ' +
-    (new Date().getTime() - start_time) / 1000 +
-    ' seconds';
+    '' + (new Date().getTime() - start_time);
 
   let refs = document.getElementsByClassName('nav__link');
   for (let i = 0; i < refs.length; i++) {

@@ -4,9 +4,12 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import * as hbs from 'hbs';
+import { TimerInterceptor } from "./timer.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.useGlobalInterceptors(new TimerInterceptor());
 
   app.setViewEngine('hbs');
   app.useStaticAssets(join(__dirname, '..', 'public'));
