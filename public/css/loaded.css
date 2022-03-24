@@ -4,7 +4,6 @@ button {
     height: 30px;
     font-size: 20px;
     border-radius: 5px;
-    margin: 0 auto;
     background-color: var(--dark_yellow);
     color: #FFFFFF;
     text-transform: uppercase;
@@ -43,14 +42,14 @@ button:active {
 }
 
 .preloader {
+    display: none;
     position: fixed;
 	bottom: 20%;
-    margin: 0 auto;
+    margin: auto;
 
     width: 70px;
     height: 70px;
-    background: url('../gifs/Spinner-2.gif');
-    background-repeat: no-repeat;
+    background: url('../gifs/Spinner-2.gif') no-repeat;
     z-index: 10;
 }
 
@@ -60,10 +59,6 @@ button:active {
 
 .loading #down__button {
     opacity: 0;
-}
-
-.loaded .preloader {
-    display: none;
 }
 
 .loaded #down__button {

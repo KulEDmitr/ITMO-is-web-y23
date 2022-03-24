@@ -1,0 +1,25 @@
+<section class="section">
+    <div class="inner">
+        <div class="section__header" id="gallery">
+            <h2 class="section__title">Галерея (автоматическая)</h2>
+        </div>
+
+        <div class="gallery">
+            <button id="clear__button" class="shadow" type="submit">Очистить страницу</button>
+
+            <div id="loaded__items__wrapper">
+                <template id ="template__loaded__item">
+                    <div class="loaded__item" id ="loaded__item">
+                        <img id="loaded__item__image" alt="" src="">
+                        <p id="loaded__item__description">Описание</p>
+                    </div>
+                </template>
+            </div>
+
+            <button id="down__button" class="shadow" type="submit">Показать больше</button>
+            <div class="preloader"></div>
+        </div>
+    </div>
+</section>
+
+<script src="/scripts/load_data.js"></script>
