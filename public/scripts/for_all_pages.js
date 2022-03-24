@@ -1,8 +1,9 @@
 let start_time = new Date().getTime();
 
 window.onload = () => {
-  document.getElementById('load__time').textContent =
-    '' + (new Date().getTime() - start_time);
+  document.getElementById('load__time').textContent = (
+    new Date().getTime() - start_time
+  ).toString();
 
   let refs = document.getElementsByClassName('nav__link');
   for (let i = 0; i < refs.length; i++) {

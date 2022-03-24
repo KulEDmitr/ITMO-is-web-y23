@@ -14,6 +14,13 @@
         <a class="link nav__link" href="/form">Форма</a>
         <a class="link nav__link" href="/loaded_pictures">Запрос</a>
       </nav>
+
+      {{#if is_auth}}
+        {{> logout }}
+      {{else}}
+        {{> login }}
+      {{/if}}
+
     </div>
   </div>
 </header>
