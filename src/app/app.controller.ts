@@ -1,32 +1,32 @@
-import { Controller, Get, Render, UseInterceptors } from "@nestjs/common";
-import { AppService } from "./app.service";
-import { TimerInterceptor } from "./timer.interceptor";
+import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
+import { AppService } from './app.service';
+import { TimerInterceptor } from '../timer.interceptor';
 
 @Controller()
 export class AppController {
 
   @Get()
-  @Render("pages/index1")
+  @Render('pages/index1')
   root() {
     return {};
   }
 
-  @Get("different")
-  @Render("pages/different")
+  @Get('different')
+  @Render('pages/different')
   different() {
     return {};
   }
 
-  @Get("form")
-  @Render("pages/form")
+  @Get('form')
+  @Render('pages/form')
   form() {
     return {
-      add_styles : '<link rel="stylesheet" href ="css/form.css">'
+      add_styles: '<link rel="stylesheet" href ="css/form.css">'
     };
   }
 
-  @Get("gallery")
-  @Render("pages/gallery")
+  @Get('gallery')
+  @Render('pages/gallery')
   gallery() {
     return {
       add_styles: '<!-- swiper -->' +
@@ -35,22 +35,22 @@ export class AppController {
     };
   }
 
-  @Get("loaded_pictures")
-  @Render("pages/loaded_pictures")
+  @Get('loaded_pictures')
+  @Render('pages/loaded_pictures')
   loaded_pictures() {
     return {
       add_styles: '<link rel="stylesheet" href ="/css/loaded.css">'
     };
   }
 
-  @Get("operation")
-  @Render("pages/operation")
+  @Get('operation')
+  @Render('pages/operation')
   operation() {
     return {};
   }
 
-  @Get("physics")
-  @Render("pages/physics")
+  @Get('physics')
+  @Render('pages/physics')
   physics() {
     return {};
   }
