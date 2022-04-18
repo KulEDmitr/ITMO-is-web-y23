@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
+import { CategoryPicture } from '@prisma/client';
 import { PictureService } from './picture.service';
 import { Picture as PictureModel } from '@prisma/client';
 
@@ -33,7 +34,7 @@ export class PictureController {
     });
   }
 
-  @Post('picture')
+  @Post('picture/create')
   async createPicture(
     @Body()
     pictureData: {
@@ -54,28 +55,32 @@ export class PictureController {
     });
   }
 
-  @Put('gallery/edit/:id')
+  @Put('picture/:id/edit')
   async editPicture(
     @Param('id') id: string,
     @Body()
     pictureData: {
       title?: string;
-      image: string;
+      image?: string;
       description?: string;
+      categories?: CategoryPicture[];
     },
   ): Promise<PictureModel> {
-    const { title, image, description } = pictureData;
+    const { title, image, description, categories } = pictureData;
     return this.pictureService.updatePicture({
       where: { id: Number(id) },
       data: {
         title: title,
         image: image,
         description: description,
+        categories: {
+          connect: [...categories],
+        },
       },
     });
   }
 
-  @Delete('picture/:id')
+  @Delete('picture/:id/delete')
   async deletePicture(@Param('id') id: string): Promise<PictureModel> {
     return this.pictureService.deletePicture({ id: Number(id) });
   }
