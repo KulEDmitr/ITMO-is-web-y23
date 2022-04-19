@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { User as UserModel } from '@prisma/client';
 
@@ -8,6 +8,7 @@ import { User as UserModel } from '@prisma/client';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: 'Create new user' })
   @Post('user')
   async signupUser(
     @Body() userData: { name?: string; email: string },

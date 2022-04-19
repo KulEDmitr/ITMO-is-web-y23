@@ -44,4 +44,14 @@ export class PostService {
       where,
     });
   }
+
+  // async deleteAllPostsBy(
+  //   where: Prisma.PostWhereInput,
+  //   include?: Prisma.PostInclude,
+  // ) {
+  //   return this.prisma.post.deleteMany({
+  //     include,
+  //     where,
+  //   });
+  // }
 }

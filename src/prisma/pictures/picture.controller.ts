@@ -7,18 +7,25 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { ApiOperation } from '@nestjs/swagger';
-import { CategoryPicture } from '@prisma/client';
+import { ApiParam, ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  Picture as PictureModel,
+  CategoryPicture as CategoryPictureModel,
+} from '@prisma/client';
 import { PictureService } from './picture.service';
-import { Picture as PictureModel } from '@prisma/client';
 
 @ApiTags('pictures')
 @Controller()
 export class PictureController {
   constructor(private readonly pictureService: PictureService) {}
 
-  @ApiOperation({ summary: 'Get the unique picture by id' })
+  @ApiOperation({ summary: 'Get picture by id' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of picture that need to be found',
+    example: '1',
+  })
   @Get('picture/:id')
   async getPictureById(@Param('id') id: string): Promise<PictureModel> {
     return this.pictureService.picture({ id: Number(id) });
@@ -41,7 +48,7 @@ export class PictureController {
     });
   }
 
-  @ApiOperation({ summary: 'Create the unique picture with given parameters' })
+  @ApiOperation({ summary: 'Create picture with given parameters' })
   @Post('picture/create')
   async createPicture(
     @Body()
@@ -50,7 +57,7 @@ export class PictureController {
       image: string;
       description?: string;
       ownerId?: string;
-      categories?: CategoryPicture[];
+      categories?: CategoryPictureModel[];
     },
   ): Promise<PictureModel> {
     const { title, image, description, ownerId, categories } = pictureData;
@@ -79,7 +86,7 @@ export class PictureController {
       title?: string;
       image?: string;
       description?: string;
-      categories?: CategoryPicture[];
+      categories?: CategoryPictureModel[];
     },
   ): Promise<PictureModel> {
     const { title, image, description, categories } = pictureData;
@@ -96,7 +103,7 @@ export class PictureController {
     });
   }
 
-  @ApiOperation({ summary: 'Delete the unique picture by id' })
+  @ApiOperation({ summary: 'Delete picture by id' })
   @Delete('picture/:id/delete')
   async deletePicture(@Param('id') id: string): Promise<PictureModel> {
     return this.pictureService.deletePicture({ id: Number(id) });

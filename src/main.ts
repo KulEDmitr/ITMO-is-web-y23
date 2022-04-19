@@ -32,8 +32,8 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Simple blog')
-    .setDescription('The project API description')
-    .setVersion('0.0.0')
+    .setDescription('The nook-of-madness project API description')
+    .setVersion('0.0.1')
     .build();
 
   const options: SwaggerDocumentOptions = {

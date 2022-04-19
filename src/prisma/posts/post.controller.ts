@@ -7,21 +7,39 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CategoryPost } from '@prisma/client';
+import { ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Post as PostModel,
+  CategoryPost as CategoryPostModel,
+} from '@prisma/client';
 import { PostService } from './post.service';
-import { Post as PostModel } from '@prisma/client';
 
 @ApiTags('posts')
 @Controller()
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @ApiOperation({ summary: 'Get post by id' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of post that need to be found',
+    example: '1',
+  })
   @Get('post/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
     return this.postService.findPost({ id: Number(id) });
   }
 
+  @ApiOperation({
+    summary: 'Get all posts with authorId equal to given user id',
+  })
+  @ApiParam({
+    name: 'authorId',
+    type: 'string',
+    description: 'User id of posts author for searching',
+    example: '1',
+  })
   @Get('feed/:authorId')
   async getPostsByAuthorId(
     @Param('authorId') authorId: string,
@@ -38,6 +56,9 @@ export class PostController {
     });
   }
 
+  @ApiOperation({
+    summary: 'Get all published posts in system',
+  })
   @Get('feed')
   async getPublishedPosts(): Promise<PostModel[]> {
     return this.postService.posts({
@@ -45,6 +66,7 @@ export class PostController {
     });
   }
 
+  @ApiOperation({ summary: 'Create post with given parameters' })
   @Post('post/create')
   async createDraft(
     @Body()
@@ -64,6 +86,15 @@ export class PostController {
     });
   }
 
+  @ApiOperation({
+    summary: 'Edit fields for existing post. All Body parameters are optional',
+  })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of post that need to be edited',
+    example: '1',
+  })
   @Put('post/:id/edit')
   async editPost(
     @Param('id') id: string,
@@ -72,7 +103,7 @@ export class PostController {
       title?: string;
       content?: string;
       published?: boolean;
-      categories?: CategoryPost[];
+      categories?: CategoryPostModel[];
     },
   ): Promise<PostModel> {
     const { title, content, published, categories } = postData;
@@ -89,6 +120,13 @@ export class PostController {
     });
   }
 
+  @ApiOperation({ summary: 'Delete post by id' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of post that need to be deleted',
+    example: '1',
+  })
   @Delete('post/:id/delete')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });
