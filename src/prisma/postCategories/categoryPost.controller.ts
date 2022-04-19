@@ -1,7 +1,9 @@
 import { Post, Controller, Body, Param, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CategoryPost as CategoryPostModel } from '@prisma/client';
 import { CategoryPostService } from './categoryPost.service';
 
+@ApiTags('postCategories')
 @Controller()
 export class CategoryPostController {
   constructor(private readonly categoryPostService: CategoryPostService) {}

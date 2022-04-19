@@ -7,10 +7,12 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CategoryPost } from '@prisma/client';
 import { PostService } from './post.service';
 import { Post as PostModel } from '@prisma/client';
 
+@ApiTags('posts')
 @Controller()
 export class PostController {
   constructor(private readonly postService: PostService) {}
@@ -20,7 +22,7 @@ export class PostController {
     return this.postService.findPost({ id: Number(id) });
   }
 
-  @Get('posts/:authorId')
+  @Get('feed/:authorId')
   async getPostsByAuthorId(
     @Param('authorId') authorId: string,
   ): Promise<PostModel[]> {
@@ -91,4 +93,29 @@ export class PostController {
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });
   }
+
+  // @Delete(':authorId/posts/delete')
+  // async removeAllPostsBy(
+  //   @Param('authorId') authorId: string,
+  //   @Body()
+  //   postData: {
+  //     published?: boolean;
+  //     category?: string;
+  //   },
+  // ) {
+  //   const { published, category } = postData;
+  //   return this.postService.deleteAllPostsBy(
+  //     {
+  //       authorId: Number(authorId),
+  //       published: published,
+  //     },
+  //     {
+  //       categories: {
+  //         where: {
+  //           id: Number(category),
+  //         },
+  //       },
+  //     },
+  //   );
+  // }
 }

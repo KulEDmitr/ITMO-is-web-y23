@@ -6,7 +6,12 @@ import { ConfigService } from '@nestjs/config';
 import * as hbs from 'hbs';
 import { TimerInterceptor } from './timer.interceptor';
 import { AuthInterceptor } from './auth.interceptor';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
 
 
 async function bootstrap() {
@@ -26,13 +31,25 @@ async function bootstrap() {
   const port = configService.get('PORT') || 3000;
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addTag('cats')
+    .setTitle('Simple blog')
+    .setDescription('The project API description')
+    .setVersion('0.0.0')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+
+  const options: SwaggerDocumentOptions = {
+    operationIdFactory: (
+      controllerKey: string,
+      methodKey: string,
+    ) => methodKey,
+  };
+
+  const document = SwaggerModule.createDocument(app, config, options);
+
+  const customOptions: SwaggerCustomOptions = {
+    swaggerOptions: { persistAuthorization: true },
+  };
+
+  SwaggerModule.setup('api', app, document, customOptions);
 
   await app.listen(port);
 }

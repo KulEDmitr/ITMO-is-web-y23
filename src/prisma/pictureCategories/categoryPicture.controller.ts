@@ -1,7 +1,9 @@
 import { Post, Controller, Body, Param, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
 import { CategoryPictureService } from './categoryPicture.service';
 
+@ApiTags('pictureCategories')
 @Controller()
 export class CategoryPictureController {
   constructor(
