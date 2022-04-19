@@ -7,7 +7,15 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiParam,
+  ApiOperation,
+  ApiTags,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+} from '@nestjs/swagger';
 import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
 import { CreatePostDto } from './models/create-post.dto';
@@ -19,6 +27,12 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @ApiOperation({ summary: 'Get post by id' })
+  @ApiOkResponse({ description: 'Post found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Post not found' })
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -33,6 +47,12 @@ export class PostController {
   @ApiOperation({
     summary: 'Get all posts with authorId equal to given user id',
   })
+  @ApiOkResponse({ description: 'Posts found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Posts not found' })
   @ApiParam({
     name: 'authorId',
     type: 'string',
@@ -58,6 +78,12 @@ export class PostController {
   @ApiOperation({
     summary: 'Get all published posts in system',
   })
+  @ApiOkResponse({ description: 'Posts found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Posts not found' })
   @Get('feed')
   async getPublishedPosts(): Promise<PostModel[]> {
     return this.postService.posts({
@@ -67,6 +93,11 @@ export class PostController {
 
   @ApiOperation({ summary: 'Create post with given parameters' })
   @Post('post/create')
+  @ApiOkResponse({ description: 'Post created' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
   async createDraft(@Body() data: CreatePostDto): Promise<PostModel> {
     return this.postService.createPost(data);
   }
@@ -74,6 +105,12 @@ export class PostController {
   @ApiOperation({
     summary: 'Edit fields for existing post. All Body parameters are optional',
   })
+  @ApiOkResponse({ description: 'Post edited' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Post not found' })
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -98,6 +135,12 @@ export class PostController {
     description: 'Id of post that need to be deleted',
     example: '1',
   })
+  @ApiOkResponse({ description: 'Post deleted' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Post not found' })
   @Delete('post/:id/delete')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });

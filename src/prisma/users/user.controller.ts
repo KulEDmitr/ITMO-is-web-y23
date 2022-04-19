@@ -1,5 +1,13 @@
 import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { User as UserModel } from '@prisma/client';
 import { CreateUserDto } from './models/create-user.dto';
@@ -11,12 +19,23 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Create new user' })
+  @ApiOkResponse({ description: 'User created' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
   @Post('user')
   async signupUser(@Body() userData: CreateUserDto): Promise<UserModel> {
     return this.userService.createUser(userData);
   }
 
   @ApiOperation({ summary: 'Get user by id' })
+  @ApiOkResponse({ description: 'User found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'User not found' })
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -31,6 +50,12 @@ export class UserController {
   @ApiOperation({
     summary: 'Edit data for existing user. All Body parameters are optional',
   })
+  @ApiOkResponse({ description: 'User edited' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'User not found' })
   @ApiParam({
     name: 'id',
     type: 'string',
