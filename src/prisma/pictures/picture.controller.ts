@@ -34,8 +34,14 @@ export class PictureController {
   @ApiOperation({
     summary: 'Get all pictures with ownerId equal to given user id',
   })
-  @Get('gallery')
-  async getPictures(@Body() ownerId: string): Promise<PictureModel[]> {
+  @ApiParam({
+    name: 'ownerId',
+    type: 'string',
+    description: 'Id of user whose pictures need to be found',
+    example: '1',
+  })
+  @Get(':ownerId/gallery')
+  async getPictures(@Param() ownerId: string): Promise<PictureModel[]> {
     return this.pictureService.pictures({
       where: {
         ownerId: {

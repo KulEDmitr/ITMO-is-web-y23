@@ -2,6 +2,7 @@ import { Post, Controller, Body, Param, Get } from '@nestjs/common';
 import { ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
 import { CategoryPictureService } from './categoryPicture.service';
+import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 
 @ApiTags('pictureCategories')
 @Controller()
@@ -12,10 +13,10 @@ export class CategoryPictureController {
 
   @ApiOperation({ summary: 'Create picture category with given parameters' })
   @Post('pictures_category')
-  async createCategory(@Body() name: string): Promise<CategoryPictureModel> {
-    return this.categoryPictureService.createCategoryPicture({
-      name,
-    });
+  async createCategory(
+    @Body() data: CreateCategoryPictureDto,
+  ): Promise<CategoryPictureModel> {
+    return this.categoryPictureService.createCategoryPicture(data);
   }
 
   @ApiOperation({ summary: 'Get pictures by category using given parameters' })

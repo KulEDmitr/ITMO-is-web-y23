@@ -8,11 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
-import {
-  Post as PostModel,
-  CategoryPost as CategoryPostModel,
-} from '@prisma/client';
+import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
+import { CreatePostDto } from './models/create-post.dto';
+import { UpdatePostDto } from './models/update-post.dto';
 
 @ApiTags('posts')
 @Controller()
@@ -68,22 +67,8 @@ export class PostController {
 
   @ApiOperation({ summary: 'Create post with given parameters' })
   @Post('post/create')
-  async createDraft(
-    @Body()
-    postData: {
-      title: string;
-      content?: string;
-      authorId: string;
-    },
-  ): Promise<PostModel> {
-    const { title, content, authorId } = postData;
-    return this.postService.createPost({
-      title,
-      content,
-      author: {
-        connect: { id: Number(authorId) },
-      },
-    });
+  async createDraft(@Body() data: CreatePostDto): Promise<PostModel> {
+    return this.postService.createPost(data);
   }
 
   @ApiOperation({
@@ -98,25 +83,11 @@ export class PostController {
   @Put('post/:id/edit')
   async editPost(
     @Param('id') id: string,
-    @Body()
-    postData: {
-      title?: string;
-      content?: string;
-      published?: boolean;
-      categories?: CategoryPostModel[];
-    },
+    @Body() data: UpdatePostDto,
   ): Promise<PostModel> {
-    const { title, content, published, categories } = postData;
     return this.postService.updatePost({
       where: { id: Number(id) },
-      data: {
-        published: published,
-        title: title,
-        content: content,
-        categories: {
-          connect: [...categories],
-        },
-      },
+      data,
     });
   }
 

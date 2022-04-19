@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CategoryPost, Prisma } from '@prisma/client';
+import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
 
 @Injectable()
 export class CategoryPostService {
@@ -24,11 +25,11 @@ export class CategoryPostService {
     });
   }
 
-  async createCategoryPost(
-    data: Prisma.CategoryPostCreateInput,
-  ): Promise<CategoryPost> {
+  async createCategoryPost(data: CreateCategoryPostDto): Promise<CategoryPost> {
     return this.prisma.categoryPost.create({
-      data,
+      data: {
+        name: data.name,
+      },
     });
   }
 }
