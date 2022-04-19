@@ -1,7 +1,9 @@
 import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 import { TimerInterceptor } from '../timer.interceptor';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Render')
 @Controller()
 export class AppController {
 

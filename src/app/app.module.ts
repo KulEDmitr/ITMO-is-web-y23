@@ -7,11 +7,14 @@ import { CategoryPictureModule } from '../prisma/pictureCategories/categoryPictu
 import { CategoryPostModule } from '../prisma/postCategories/categoryPost.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { PostsModule } from '../posts/posts.module';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    PrismaModule,
     UserModule,
     PostModule,
     PictureModule,
