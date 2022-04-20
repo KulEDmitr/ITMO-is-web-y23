@@ -1,4 +1,4 @@
-import { Post, Controller, Body, Param, Get } from '@nestjs/common';
+import { Post, Controller, Body, Param, Get, Query } from '@nestjs/common';
 import {
   ApiParam,
   ApiOperation,
@@ -6,11 +6,11 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
-  ApiNotFoundResponse,
+  ApiNotFoundResponse, ApiQuery,
 } from '@nestjs/swagger';
 import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
 import { CategoryPictureService } from './categoryPicture.service';
-import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
+import { CategoryPictureDto } from './models/categoryPicture.dto';
 
 @ApiTags('pictureCategories')
 @Controller()
@@ -27,7 +27,7 @@ export class CategoryPictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @Post('pictures_category')
   async createCategory(
-    @Body() data: CreateCategoryPictureDto,
+    @Body() data: CategoryPictureDto,
   ): Promise<CategoryPictureModel> {
     return this.categoryPictureService.createCategoryPicture(data);
   }
@@ -40,6 +40,12 @@ export class CategoryPictureController {
       'Id of pictures category that need to be found with pictures in it',
     example: '1',
   })
+  @ApiQuery({
+    name: 'ownerId',
+    type: 'string',
+    description: 'User id which used for filter posts by its owner',
+    example: '1',
+  })
   @ApiOkResponse({ description: 'Category found' })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
@@ -49,7 +55,7 @@ export class CategoryPictureController {
   @Get('pictures/:categoryId')
   async getPicturesByCategory(
     @Param('categoryId') categoryId: string,
-    @Body() ownerId?: string,
+    @Query() ownerId?: string,
   ): Promise<CategoryPictureModel> {
     return this.categoryPictureService.getPictures(
       {

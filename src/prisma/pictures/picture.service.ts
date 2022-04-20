@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Picture, Prisma } from '@prisma/client';
+import { CreatePictureDto } from './models/create-picture.dto';
+import { CategoryPictureDto } from '../pictureCategories/models/categoryPicture.dto';
+import { UpdatePictureDto } from './models/update-picture.dto';
 
 @Injectable()
 export class PictureService {
@@ -22,20 +25,39 @@ export class PictureService {
     return this.prisma.picture.findMany({ where, orderBy });
   }
 
-  async createPicture(data: Prisma.PictureCreateInput): Promise<Picture> {
+  async createPicture(
+    data: CreatePictureDto,
+  ): Promise<Picture> {
     return this.prisma.picture.create({
-      data,
+      data: {
+        title: data.title,
+        image: data.image,
+        description: data.description,
+        owner: {
+          connect: { id: Number(data.ownerId) },
+        },
+        // categories: {
+        //   connect: [...categories],
+        // },
+      },
     });
   }
 
   async updatePicture(params: {
     where: Prisma.PictureWhereUniqueInput;
-    data: Prisma.PictureUpdateInput;
+    data: UpdatePictureDto;
   }): Promise<Picture> {
     const { data, where } = params;
     return this.prisma.picture.update({
-      data,
       where,
+      data: {
+        title: data.title,
+        image: data.image,
+        description: data.description,
+        // categories: {
+        //   connect: [...categories],
+        // },
+      },
     });
   }
 

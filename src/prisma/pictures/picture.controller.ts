@@ -18,9 +18,10 @@ import {
 } from '@nestjs/swagger';
 import {
   Picture as PictureModel,
-  CategoryPicture as CategoryPictureModel,
+
 } from '@prisma/client';
 import { PictureService } from './picture.service';
+import { CreatePictureDto } from './models/create-picture.dto';
 
 @ApiTags('pictures')
 @Controller()
@@ -82,27 +83,9 @@ export class PictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @Post('picture/create')
   async createPicture(
-    @Body()
-    pictureData: {
-      title: string;
-      image: string;
-      description?: string;
-      ownerId?: string;
-      categories?: CategoryPictureModel[];
-    },
+    @Body() data: CreatePictureDto,
   ): Promise<PictureModel> {
-    const { title, image, description, ownerId, categories } = pictureData;
-    return this.pictureService.createPicture({
-      title,
-      image,
-      description,
-      owner: {
-        connect: { id: Number(ownerId) },
-      },
-      categories: {
-        connect: [...categories],
-      },
-    });
+    return this.pictureService.createPicture(data);
   }
 
   @ApiOperation({
@@ -118,25 +101,11 @@ export class PictureController {
   @Put('picture/:id/edit')
   async editPicture(
     @Param('id') id: string,
-    @Body()
-    pictureData: {
-      title?: string;
-      image?: string;
-      description?: string;
-      categories?: CategoryPictureModel[];
-    },
+    @Body() data: CreatePictureDto,
   ): Promise<PictureModel> {
-    const { title, image, description, categories } = pictureData;
     return this.pictureService.updatePicture({
       where: { id: Number(id) },
-      data: {
-        title: title,
-        image: image,
-        description: description,
-        categories: {
-          connect: [...categories],
-        },
-      },
+      data,
     });
   }
 

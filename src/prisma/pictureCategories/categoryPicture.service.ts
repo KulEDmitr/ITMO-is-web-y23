@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CategoryPicture, Prisma } from '@prisma/client';
-import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
+import { CategoryPictureDto } from './models/categoryPicture.dto';
 
 @Injectable()
 export class CategoryPictureService {
@@ -16,7 +16,7 @@ export class CategoryPictureService {
   }
 
   async createCategoryPicture(
-    data: CreateCategoryPictureDto,
+    data: CategoryPictureDto,
   ): Promise<CategoryPicture> {
     return this.prisma.categoryPicture.create({
       data: {
