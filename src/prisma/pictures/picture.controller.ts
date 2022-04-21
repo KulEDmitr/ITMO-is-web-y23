@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiParam,
@@ -42,7 +43,7 @@ export class PictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
   @Get('picture/:id')
-  async getPictureById(@Param('id') id: string): Promise<PictureModel> {
+  async getPictureById(@Param('id' ) id: string): Promise<PictureModel> {
     return this.pictureService.picture({ id: Number(id) });
   }
 

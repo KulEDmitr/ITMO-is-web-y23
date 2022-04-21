@@ -1,17 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
+import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class CreatePictureDto {
   @ApiProperty({
     description: 'The title of the Picture',
     example: 'my first picture',
   })
+  @IsNotEmpty()
   title: string;
 
   @ApiProperty({
     description: 'The url to the Picture location',
     example: 'public/images/gallery/1.jpg',
   })
+  @IsNotEmpty()
   image: string;
 
   @ApiPropertyOptional({
@@ -24,5 +26,7 @@ export class CreatePictureDto {
     description: 'The id of owner of the Picture',
     example: 1,
   })
+  @IsNotEmpty()
+  @IsNumberString()
   ownerId: number;
 }

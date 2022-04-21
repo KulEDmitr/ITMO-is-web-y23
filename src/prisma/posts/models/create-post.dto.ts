@@ -1,10 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({
     description: 'The title of the Post',
     example: 'my first draft',
   })
+  @IsNotEmpty()
   title: string;
 
   @ApiPropertyOptional({
@@ -24,5 +26,7 @@ export class CreatePostDto {
     description: 'The id of author of the Post',
     example: 1,
   })
+  @IsNotEmpty()
+  @IsNumberString()
   authorId: number;
 }
