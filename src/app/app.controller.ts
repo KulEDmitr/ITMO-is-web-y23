@@ -13,6 +13,21 @@ export class AppController {
     return {};
   }
 
+  @Get('auth')
+  @Render('pages/loginForm')
+  loginForm() {
+    return {
+      add_styles: '<link rel="stylesheet" href ="css/form.css">' +
+        '<link rel="stylesheet" href ="css/authForm.css">',
+    };
+  }
+
+  @Get('blog')
+  @Render('pages/blog')
+  blog() {
+    return {};
+  }
+
   @Get('different')
   @Render('pages/different')
   different() {
@@ -23,7 +38,8 @@ export class AppController {
   @Render('pages/form')
   form() {
     return {
-      add_styles: '<link rel="stylesheet" href ="css/form.css">'
+      add_styles: '<link rel="stylesheet" href ="css/form.css">' +
+        '<link rel="stylesheet" href ="css/todoForm.css">',
     };
   }
 
@@ -33,7 +49,7 @@ export class AppController {
     return {
       add_styles: '<!-- swiper -->' +
         '<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>' +
-        '<link rel="stylesheet" href ="/css/gallery.css">'
+        '<link rel="stylesheet" href ="/css/gallery.css">',
     };
   }
 
@@ -41,7 +57,7 @@ export class AppController {
   @Render('pages/loaded_pictures')
   loaded_pictures() {
     return {
-      add_styles: '<link rel="stylesheet" href ="/css/loaded.css">'
+      add_styles: '<link rel="stylesheet" href ="/css/loaded.css">',
     };
   }
 

@@ -1,0 +1,65 @@
+.todo__item {
+    display:flex;
+    min-height: 60px;
+    border: 2px solid var(--border_gray);
+    border-radius: 7px;
+    padding: 10px 20px;
+    background-color: var(--light_blue);
+    margin-bottom: 20px;
+}
+
+.todo__item.checked{
+    background-color: darkslategray;
+    opacity: 0.4;
+}
+
+.todo__item.checked .task__text {
+    text-decoration: line-through;
+}
+
+.todo__item.delition{
+    animation: opacity 1s ease-in-out;
+}
+
+.task__text {
+    width: 80%;
+    display:flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.form__result {
+    padding: 0;
+    color: var(--light_background);
+}
+
+.buttons {
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2%;
+}
+
+.button__delete {
+    background-color: var(--dark_yellow);
+    color: #FFFFFF;
+}
+
+.button__delete:hover {
+    background-color: var(--light_red);
+    cursor: pointer;
+}
+
+.button__delete:active {
+    top: 3px;
+    box-shadow: 0 2px 0 var(--black);
+}
+
+@keyframes opacity {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
