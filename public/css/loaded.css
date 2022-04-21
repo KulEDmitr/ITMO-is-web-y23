@@ -1,4 +1,4 @@
-button {
+.shadow {
     outline: none;
     border: none;
     height: 30px;
@@ -10,12 +10,12 @@ button {
     margin: 10px auto;
 }
 
-button:hover {
+.shadow:hover {
     background-color: var(--light_red);
     cursor: pointer;
 }
 
-button:active {
+.shadow:active {
     top: 3px;
     box-shadow: 0 2px 0 var(--black);
 }
