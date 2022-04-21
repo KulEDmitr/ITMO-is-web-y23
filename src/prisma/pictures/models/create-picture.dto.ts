@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsNotEmpty, IsNumberString, IsPositive, IsString } from 'class-validator';
 
 export class CreatePictureDto {
   @ApiProperty({
@@ -7,6 +7,7 @@ export class CreatePictureDto {
     example: 'my first picture',
   })
   @IsNotEmpty()
+  @IsString()
   title: string;
 
   @ApiProperty({
@@ -14,12 +15,14 @@ export class CreatePictureDto {
     example: 'public/images/gallery/1.jpg',
   })
   @IsNotEmpty()
+  @IsString()
   image: string;
 
   @ApiPropertyOptional({
     description: 'The description of the Picture',
     example: 'This is a short template of picture description',
   })
+  @IsString()
   description: string;
 
   @ApiProperty({
@@ -28,5 +31,6 @@ export class CreatePictureDto {
   })
   @IsNotEmpty()
   @IsNumberString()
+  @IsPositive()
   ownerId: number;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumberString, IsPositive, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -7,12 +7,14 @@ export class CreatePostDto {
     example: 'my first draft',
   })
   @IsNotEmpty()
+  @IsString()
   title: string;
 
   @ApiPropertyOptional({
     description: 'The content of the Post',
     example: 'This is a short template of draft',
   })
+  @IsString()
   content: string;
 
   @ApiPropertyOptional({
@@ -20,6 +22,7 @@ export class CreatePostDto {
       'Field, that described is the post available for all users or not',
     default: false,
   })
+  @IsBoolean()
   published: boolean;
 
   @ApiProperty({
@@ -28,5 +31,6 @@ export class CreatePostDto {
   })
   @IsNotEmpty()
   @IsNumberString()
+  @IsPositive()
   authorId: number;
 }
