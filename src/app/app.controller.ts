@@ -1,12 +1,9 @@
-import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
-import { AppService } from './app.service';
-import { TimerInterceptor } from '../timer.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Render } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 
-@ApiTags('Render')
+@ApiExcludeController()
 @Controller()
 export class AppController {
-
   @Get()
   @Render('pages/index1')
   root() {
@@ -17,7 +14,8 @@ export class AppController {
   @Render('pages/loginForm')
   loginForm() {
     return {
-      add_styles: '<link rel="stylesheet" href ="css/form.css">' +
+      add_styles:
+        '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
     };
   }
@@ -38,7 +36,8 @@ export class AppController {
   @Render('pages/form')
   form() {
     return {
-      add_styles: '<link rel="stylesheet" href ="css/form.css">' +
+      add_styles:
+        '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/todoForm.css">',
     };
   }
@@ -47,7 +46,8 @@ export class AppController {
   @Render('pages/gallery')
   gallery() {
     return {
-      add_styles: '<!-- swiper -->' +
+      add_styles:
+        '<!-- swiper -->' +
         '<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>' +
         '<link rel="stylesheet" href ="/css/gallery.css">',
     };
