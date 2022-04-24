@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Picture, Prisma } from '@prisma/client';
 import { CreatePictureDto } from './models/create-picture.dto';
-import { CategoryPictureDto } from '../pictureCategories/models/categoryPicture.dto';
 import { UpdatePictureDto } from './models/update-picture.dto';
 
 @Injectable()
@@ -17,17 +16,11 @@ export class PictureService {
     });
   }
 
-  async pictures(params: {
-    where?: Prisma.PictureWhereInput;
-    orderBy?: Prisma.PictureOrderByWithRelationInput;
-  }): Promise<Picture[]> {
-    const { where, orderBy } = params;
-    return this.prisma.picture.findMany({ where, orderBy });
+  async pictures(): Promise<Picture[] | null> {
+    return this.prisma.picture.findMany();
   }
 
-  async createPicture(
-    data: CreatePictureDto,
-  ): Promise<Picture> {
+  async createPicture(data: CreatePictureDto): Promise<Picture | null> {
     return this.prisma.picture.create({
       data: {
         title: data.title,
@@ -46,7 +39,7 @@ export class PictureService {
   async updatePicture(params: {
     where: Prisma.PictureWhereUniqueInput;
     data: UpdatePictureDto;
-  }): Promise<Picture> {
+  }): Promise<Picture | null> {
     const { data, where } = params;
     return this.prisma.picture.update({
       where,
@@ -61,7 +54,9 @@ export class PictureService {
     });
   }
 
-  async deletePicture(where: Prisma.PictureWhereUniqueInput): Promise<Picture> {
+  async deletePicture(
+    where: Prisma.PictureWhereUniqueInput,
+  ): Promise<Picture | null> {
     return this.prisma.picture.delete({
       where,
     });

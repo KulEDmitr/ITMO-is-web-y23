@@ -1,7 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
+import { Picture } from '@prisma/client';
 
-export class CreatePictureDto {
+export class PictureEntity implements Picture {
+  @ApiProperty({
+    description: 'The unique identifier of the picture',
+    example: 1,
+  })
+  id: number;
+
   @ApiProperty({
     description: 'The title of the Picture',
     example: 'my first picture',
@@ -20,15 +26,19 @@ export class CreatePictureDto {
   })
   description: string;
 
+  @ApiProperty({
+    description: 'The id of owner of the Picture',
+    example: 1,
+  })
+  ownerId: number;
+
   @ApiPropertyOptional({
     description: 'Array of categories belong to the picture',
     example: [1],
   })
   categories: number[];
 
-  @ApiProperty({
-    description: 'The id of owner of the Picture',
-    example: 1,
-  })
-  ownerId: number;
+  constructor(partial: Partial<PictureEntity>) {
+    Object.assign(this, partial);
+  }
 }

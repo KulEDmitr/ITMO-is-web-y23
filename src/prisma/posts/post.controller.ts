@@ -15,19 +15,24 @@ import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
+
 import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
+import { PostEntity } from './models/post.entity';
 
 @ApiTags('posts')
-@Controller()
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @ApiOperation({ summary: 'Get post by id' })
-  @ApiOkResponse({ description: 'Post found' })
+  @ApiOkResponse({
+    type: PostEntity,
+    description: 'Post found',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
@@ -39,73 +44,53 @@ export class PostController {
     description: 'Id of post that need to be found',
     example: '1',
   })
-  @Get('post/:id')
-  async getPostById(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.findPost({ id: Number(id) });
-  }
-
-  @ApiOperation({
-    summary: 'Get all posts with authorId equal to given user id',
-  })
-  @ApiOkResponse({ description: 'Posts found' })
-  @ApiBadRequestResponse({
-    description: 'The request could not be understood due to malformed syntax.',
-  })
-  @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiNotFoundResponse({ description: 'Posts not found' })
-  @ApiParam({
-    name: 'authorId',
-    type: 'string',
-    description: 'User id of posts author for searching',
-    example: '1',
-  })
-  @Get('feed/:authorId')
-  async getPostsByAuthorId(
-    @Param('authorId') authorId: string,
-  ): Promise<PostModel[]> {
-    return this.postService.posts({
-      where: {
-        authorId: {
-          equals: Number(authorId),
-        },
-      },
-      orderBy: {
-        id: 'asc',
-      },
-    });
+  @Get(':id')
+  async getPostById(@Param('id') id: string): Promise<PostEntity> {
+    return new PostEntity(await this.postService.findPost({ id: Number(id) }));
   }
 
   @ApiOperation({
     summary: 'Get all published posts in system',
   })
-  @ApiOkResponse({ description: 'Posts found' })
+  @ApiOkResponse({
+    type: PostEntity,
+    isArray: true,
+    description: 'Posts found',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Posts not found' })
-  @Get('feed')
-  async getPublishedPosts(): Promise<PostModel[]> {
-    return this.postService.posts({
+  @Get()
+  async getPublishedPosts(): Promise<PostEntity[]> {
+    const posts = await this.postService.posts({
       where: { published: true },
     });
+    return posts.map((post) => new PostEntity(post));
   }
 
   @ApiOperation({ summary: 'Create post with given parameters' })
-  @Post('post/create')
-  @ApiOkResponse({ description: 'Post created' })
+  @ApiCreatedResponse({
+    type: PostEntity,
+    description: 'Post created',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  async createDraft(@Body() data: CreatePostDto): Promise<PostModel> {
-    return this.postService.createPost(data);
+  @Post()
+  async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
+    return new PostEntity(await this.postService.createPost(data));
   }
 
   @ApiOperation({
     summary: 'Edit fields for existing post. All Body parameters are optional',
   })
-  @ApiOkResponse({ description: 'Post edited' })
+  @ApiCreatedResponse({
+    type: PostEntity,
+    description: 'Post edited',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
@@ -117,15 +102,17 @@ export class PostController {
     description: 'Id of post that need to be edited',
     example: '1',
   })
-  @Put('post/:id/edit')
+  @Put(':id')
   async editPost(
     @Param('id') id: string,
     @Body() data: UpdatePostDto,
-  ): Promise<PostModel> {
-    return this.postService.updatePost({
-      where: { id: Number(id) },
-      data,
-    });
+  ): Promise<PostEntity> {
+    return new PostEntity(
+      await this.postService.updatePost({
+        where: { id: Number(id) },
+        data,
+      }),
+    );
   }
 
   @ApiOperation({ summary: 'Delete post by id' })
@@ -135,39 +122,19 @@ export class PostController {
     description: 'Id of post that need to be deleted',
     example: '1',
   })
-  @ApiOkResponse({ description: 'Post deleted' })
+  @ApiOkResponse({
+    type: PostEntity,
+    description: 'Post deleted',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
-  @Delete('post/:id/delete')
-  async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost({ id: Number(id) });
+  @Delete(':id')
+  async deletePost(@Param('id') id: string): Promise<PostEntity> {
+    return new PostEntity(
+      await this.postService.deletePost({ id: Number(id) }),
+    );
   }
-
-  // @Delete(':authorId/posts/delete')
-  // async removeAllPostsBy(
-  //   @Param('authorId') authorId: string,
-  //   @Body()
-  //   postData: {
-  //     published?: boolean;
-  //     category?: string;
-  //   },
-  // ) {
-  //   const { published, category } = postData;
-  //   return this.postService.deleteAllPostsBy(
-  //     {
-  //       authorId: Number(authorId),
-  //       published: published,
-  //     },
-  //     {
-  //       categories: {
-  //         where: {
-  //           id: Number(category),
-  //         },
-  //       },
-  //     },
-  //   );
-  // }
 }

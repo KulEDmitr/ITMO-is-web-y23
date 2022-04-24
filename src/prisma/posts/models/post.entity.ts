@@ -1,6 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Post } from '@prisma/client';
 
-export class CreatePostDto {
+export class PostEntity implements Post {
+  @ApiProperty({
+    description: 'The unique identifier of the post',
+    example: 1,
+  })
+  id: number;
+
   @ApiProperty({
     description: 'The title of the Post',
     example: 'my first draft',
@@ -20,15 +27,19 @@ export class CreatePostDto {
   })
   published: boolean;
 
+  @ApiProperty({
+    description: 'The id of author of the Post',
+    example: 1,
+  })
+  authorId: number;
+
   @ApiPropertyOptional({
     description: 'Array of categories belong to the post',
     example: [1],
   })
   categories: number[];
 
-  @ApiProperty({
-    description: 'The id of author of the Post',
-    example: 1,
-  })
-  authorId: number;
+  constructor(partial: Partial<PostEntity>) {
+    Object.assign(this, partial);
+  }
 }
