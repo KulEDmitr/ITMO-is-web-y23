@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryPost } from '@prisma/client';
+import { PostCategory } from '@prisma/client';
 
-export class CategoryPostEntity implements CategoryPost {
+export class CategoryPostEntity implements PostCategory {
   @ApiProperty({
     description: 'The unique identifier of the post category',
     example: 1,

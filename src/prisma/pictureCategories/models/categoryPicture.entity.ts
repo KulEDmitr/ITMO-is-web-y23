@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryPicture } from '@prisma/client';
+import { PictureCategory } from '@prisma/client';
 
-export class CategoryPictureEntity implements CategoryPicture {
+export class CategoryPictureEntity implements PictureCategory {
   @ApiProperty({
     description: 'The unique identifier of the picture category',
     example: 1,

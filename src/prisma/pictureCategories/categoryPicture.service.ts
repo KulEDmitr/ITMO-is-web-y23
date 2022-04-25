@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CategoryPicture, Prisma } from '@prisma/client';
+import { PictureCategory, Prisma } from '@prisma/client';
 import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 
 @Injectable()
@@ -8,17 +8,17 @@ export class CategoryPictureService {
   constructor(private prisma: PrismaService) {}
 
   async categoryPicture(
-    categoryPictureWhereUniqueInput: Prisma.CategoryPictureWhereUniqueInput,
-  ): Promise<CategoryPicture | null> {
-    return this.prisma.categoryPicture.findUnique({
+    categoryPictureWhereUniqueInput: Prisma.PictureCategoryWhereUniqueInput,
+  ): Promise<PictureCategory | null> {
+    return this.prisma.pictureCategory.findUnique({
       where: categoryPictureWhereUniqueInput,
     });
   }
 
   async createCategoryPicture(
     data: CreateCategoryPictureDto,
-  ): Promise<CategoryPicture | null> {
-    return this.prisma.categoryPicture.create({
+  ): Promise<PictureCategory | null> {
+    return this.prisma.pictureCategory.create({
       data: {
         name: data.name,
       },
@@ -26,16 +26,16 @@ export class CategoryPictureService {
   }
 
   async getPictures(
-    categoryPictureWhereUniqueInput: Prisma.CategoryPictureWhereUniqueInput,
-    categoryPictureInclude?: Prisma.CategoryPictureInclude,
-  ): Promise<CategoryPicture | null> {
-    return this.prisma.categoryPicture.findUnique({
+    categoryPictureWhereUniqueInput: Prisma.PictureCategoryWhereUniqueInput,
+    categoryPictureInclude?: Prisma.PictureCategoryInclude,
+  ): Promise<PictureCategory | null> {
+    return this.prisma.pictureCategory.findUnique({
       where: categoryPictureWhereUniqueInput,
       include: categoryPictureInclude,
     });
   }
 
-  async categories(): Promise<CategoryPicture[] | null> {
-    return this.prisma.categoryPicture.findMany();
+  async categories(): Promise<PictureCategory[] | null> {
+    return this.prisma.pictureCategory.findMany();
   }
 }

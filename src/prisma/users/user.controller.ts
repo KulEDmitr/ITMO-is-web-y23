@@ -60,7 +60,7 @@ export class UserController {
   })
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserEntity> {
-    return new UserEntity(await this.userService.user({ id: Number(id) }));
+    return new UserEntity(await this.userService.user({ id: id }));
   }
 
   @ApiOperation({ summary: 'Get all users' })
@@ -105,7 +105,7 @@ export class UserController {
   ): Promise<UserEntity> {
     return new UserEntity(
       await this.userService.updateUser({
-        where: { id: Number(id) },
+        where: { id: id },
         data,
       }),
     );
@@ -216,6 +216,6 @@ export class UserController {
   @ApiNotFoundResponse({ description: 'User not found' })
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<UserEntity> {
-    return new UserEntity(await this.userService.delete({ id: Number(id) }));
+    return new UserEntity(await this.userService.delete({ id: id }));
   }
 }

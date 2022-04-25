@@ -29,9 +29,9 @@ export class PostEntity implements Post {
 
   @ApiProperty({
     description: 'The id of author of the Post',
-    example: 1,
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  authorId: number;
+  authorId: string;
 
   @ApiPropertyOptional({
     description: 'Array of categories belong to the post',

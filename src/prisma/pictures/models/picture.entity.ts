@@ -28,9 +28,9 @@ export class PictureEntity implements Picture {
 
   @ApiProperty({
     description: 'The id of owner of the Picture',
-    example: 1,
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  ownerId: number;
+  ownerId: string;
 
   @ApiPropertyOptional({
     description: 'Array of categories belong to the picture',

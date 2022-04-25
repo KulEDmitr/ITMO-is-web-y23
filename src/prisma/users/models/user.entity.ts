@@ -1,12 +1,16 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { User } from '@prisma/client';
 
 export class UserEntity implements User {
   @ApiProperty({
     description: 'The unique identifier of the User',
-    example: 1,
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: 'The email of the User',
@@ -23,4 +27,13 @@ export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
   }
+
+  @ApiProperty({
+    description: 'The unique login of the User',
+    example: 'JaneDoe',
+  })
+  login: string;
+
+  @ApiHideProperty()
+  password: string;
 }

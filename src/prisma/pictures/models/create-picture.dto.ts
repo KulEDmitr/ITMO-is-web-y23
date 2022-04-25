@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryPicture as CategoryPictureModel } from '@prisma/client';
 
 export class CreatePictureDto {
   @ApiProperty({
@@ -28,7 +27,7 @@ export class CreatePictureDto {
 
   @ApiProperty({
     description: 'The id of owner of the Picture',
-    example: 1,
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  ownerId: number;
+  ownerId: string;
 }

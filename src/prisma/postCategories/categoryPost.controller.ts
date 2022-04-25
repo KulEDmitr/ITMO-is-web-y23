@@ -91,7 +91,9 @@ export class CategoryPostController {
         {
           posts: {
             where: {
-              published: published,
+              post: {
+                published: published,
+              },
             },
           },
         },
