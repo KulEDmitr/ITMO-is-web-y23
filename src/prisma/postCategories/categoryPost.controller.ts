@@ -38,6 +38,23 @@ export class CategoryPostController {
     );
   }
 
+  @ApiOperation({ summary: 'Get all post categories' })
+  @ApiOkResponse({
+    type: CategoryPostEntity,
+    isArray: true,
+    description: 'Categories found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Pictures not found' })
+  @Get()
+  async getCategories(): Promise<CategoryPostEntity[]> {
+    const categories = await this.categoryPostService.categories();
+    return categories.map((category) => new CategoryPostEntity(category));
+  }
+
   @ApiOperation({ summary: 'Get posts by category using given parameters' })
   @ApiParam({
     name: 'categoryId',

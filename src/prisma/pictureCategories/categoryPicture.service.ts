@@ -17,7 +17,7 @@ export class CategoryPictureService {
 
   async createCategoryPicture(
     data: CreateCategoryPictureDto,
-  ): Promise<CategoryPicture> {
+  ): Promise<CategoryPicture | null> {
     return this.prisma.categoryPicture.create({
       data: {
         name: data.name,
@@ -28,10 +28,14 @@ export class CategoryPictureService {
   async getPictures(
     categoryPictureWhereUniqueInput: Prisma.CategoryPictureWhereUniqueInput,
     categoryPictureInclude?: Prisma.CategoryPictureInclude,
-  ): Promise<CategoryPicture> {
+  ): Promise<CategoryPicture | null> {
     return this.prisma.categoryPicture.findUnique({
       where: categoryPictureWhereUniqueInput,
       include: categoryPictureInclude,
     });
+  }
+
+  async categories(): Promise<CategoryPicture[] | null> {
+    return this.prisma.categoryPicture.findMany();
   }
 }

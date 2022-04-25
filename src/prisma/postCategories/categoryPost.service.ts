@@ -25,6 +25,10 @@ export class CategoryPostService {
     });
   }
 
+  async categories(): Promise<CategoryPost[] | null> {
+    return this.prisma.categoryPost.findMany();
+  }
+
   async createCategoryPost(data: CreateCategoryPostDto): Promise<CategoryPost> {
     return this.prisma.categoryPost.create({
       data: {

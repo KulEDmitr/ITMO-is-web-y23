@@ -16,7 +16,7 @@ import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 import { CategoryPictureEntity } from './models/categoryPicture.entity';
 
 @ApiTags('pictureCategories')
-@Controller()
+@Controller('picture-categories')
 export class CategoryPictureController {
   constructor(
     private readonly categoryPictureService: CategoryPictureService,
@@ -31,13 +31,30 @@ export class CategoryPictureController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @Post('picture-categories')
+  @Post()
   async createCategory(
     @Body() data: CreateCategoryPictureDto,
   ): Promise<CategoryPictureEntity> {
     return new CategoryPictureEntity(
       await this.categoryPictureService.createCategoryPicture(data),
     );
+  }
+
+  @ApiOperation({ summary: 'Get all picture categories' })
+  @ApiOkResponse({
+    type: CategoryPictureEntity,
+    isArray: true,
+    description: 'Categories found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Pictures not found' })
+  @Get()
+  async getCategories(): Promise<CategoryPictureEntity[]> {
+    const categories = await this.categoryPictureService.categories();
+    return categories.map((category) => new CategoryPictureEntity(category));
   }
 
   @ApiOperation({ summary: 'Get pictures by category using given parameters' })
@@ -63,7 +80,7 @@ export class CategoryPictureController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @Get('picture-categories/:categoryId/pictures')
+  @Get(':categoryId/pictures')
   async getPicturesByCategory(
     @Param('categoryId') categoryId: string,
     @Query() ownerId?: string,

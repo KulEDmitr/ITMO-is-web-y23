@@ -21,6 +21,7 @@ import { PictureService } from './picture.service';
 
 import { CreatePictureDto } from './models/create-picture.dto';
 import { PictureEntity } from './models/picture.entity';
+import { UpdatePictureDto } from './models/update-picture.dto';
 
 @ApiTags('pictures')
 @Controller('pictures')
@@ -97,7 +98,7 @@ export class PictureController {
   @Put(':id')
   async editPicture(
     @Param('id') id: string,
-    @Body() data: CreatePictureDto,
+    @Body() data: UpdatePictureDto,
   ): Promise<PictureEntity> {
     return new PictureEntity(
       await this.pictureService.updatePicture({
