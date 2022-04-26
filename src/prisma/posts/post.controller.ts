@@ -64,9 +64,7 @@ export class PostController {
   @ApiNotFoundResponse({ description: 'Posts not found' })
   @Get()
   async getPublishedPosts(): Promise<PostEntity[]> {
-    const posts = await this.postService.posts({
-      where: { published: true },
-    });
+    const posts = await this.postService.posts({ published: true });
     return posts.map((post) => new PostEntity(post));
   }
 
@@ -108,10 +106,7 @@ export class PostController {
     @Body() data: UpdatePostDto,
   ): Promise<PostEntity> {
     return new PostEntity(
-      await this.postService.updatePost({
-        where: { id: Number(id) },
-        data,
-      }),
+      await this.postService.updatePost({ id: Number(id) }, data),
     );
   }
 
