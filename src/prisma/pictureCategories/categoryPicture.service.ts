@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { PictureCategory, Prisma } from '@prisma/client';
+import { Picture, PictureCategory, Prisma } from '@prisma/client';
 import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 
 @Injectable()
@@ -26,12 +26,10 @@ export class CategoryPictureService {
   }
 
   async getPictures(
-    categoryPictureWhereUniqueInput: Prisma.PictureCategoryWhereUniqueInput,
-    categoryPictureInclude?: Prisma.PictureCategoryInclude,
-  ): Promise<PictureCategory | null> {
-    return this.prisma.pictureCategory.findUnique({
-      where: categoryPictureWhereUniqueInput,
-      include: categoryPictureInclude,
+    pictureWhereInput: Prisma.PictureWhereInput,
+  ): Promise<Picture[] | null> {
+    return this.prisma.picture.findMany({
+      where: pictureWhereInput,
     });
   }
 

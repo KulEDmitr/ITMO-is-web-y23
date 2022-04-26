@@ -101,10 +101,7 @@ export class PictureController {
     @Body() data: UpdatePictureDto,
   ): Promise<PictureEntity> {
     return new PictureEntity(
-      await this.pictureService.updatePicture({
-        where: { id: Number(id) },
-        data,
-      }),
+      await this.pictureService.updatePicture({ id: Number(id) }, data),
     );
   }
 

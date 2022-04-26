@@ -27,29 +27,36 @@ export class PictureService {
         image: data.image,
         description: data.description,
         owner: {
-          connect: { id: Number(data.ownerId) },
+          connect: { id: data.ownerId },
         },
-        // categories: {
-        //   connect: [...categories],
-        // },
+        categories: {
+          create: data.categories?.map((cat) => ({
+            category: {
+              connect: { id: cat },
+            },
+          })),
+        },
       },
     });
   }
 
-  async updatePicture(params: {
-    where: Prisma.PictureWhereUniqueInput;
-    data: UpdatePictureDto;
-  }): Promise<Picture | null> {
-    const { data, where } = params;
+  async updatePicture(
+    where: Prisma.PictureWhereUniqueInput,
+    data: UpdatePictureDto,
+  ): Promise<Picture | null> {
     return this.prisma.picture.update({
       where,
       data: {
         title: data.title,
         image: data.image,
         description: data.description,
-        // categories: {
-        //   connect: [...categories],
-        // },
+        categories: {
+          create: data.categories?.map((cat) => ({
+            category: {
+              connect: { id: cat },
+            },
+          })),
+        },
       },
     });
   }

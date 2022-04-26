@@ -14,6 +14,7 @@ import { CategoryPostService } from './categoryPost.service';
 
 import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
 import { CategoryPostEntity } from './models/categoryPost.entity';
+import { PostEntity } from '../posts/models/post.entity';
 
 @ApiTags('postCategories')
 @Controller('post-categories')
@@ -82,22 +83,15 @@ export class CategoryPostController {
   async getPostsByCategory(
     @Param('categoryId') categoryId: string,
     @Query() published?: boolean,
-  ): Promise<CategoryPostEntity> {
-    return new CategoryPostEntity(
-      await this.categoryPostService.getPosts(
-        {
-          id: Number(categoryId),
+  ): Promise<PostEntity[]> {
+    const posts = await this.categoryPostService.getPosts({
+      categories: {
+        some: {
+          catId: Number(categoryId),
         },
-        {
-          posts: {
-            where: {
-              post: {
-                published: published,
-              },
-            },
-          },
-        },
-      ),
-    );
+      },
+      published: Boolean(published),
+    });
+    return posts.map((post) => new PostEntity(post));
   }
 }

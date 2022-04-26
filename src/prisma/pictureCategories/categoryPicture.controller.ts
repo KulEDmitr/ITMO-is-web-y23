@@ -14,6 +14,7 @@ import { CategoryPictureService } from './categoryPicture.service';
 
 import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 import { CategoryPictureEntity } from './models/categoryPicture.entity';
+import { PictureEntity } from '../pictures/models/picture.entity';
 
 @ApiTags('pictureCategories')
 @Controller('picture-categories')
@@ -63,13 +64,13 @@ export class CategoryPictureController {
     type: 'string',
     description:
       'Id of pictures category that need to be found with pictures in it',
-    example: 1,
+    example: '1',
   })
   @ApiQuery({
     name: 'ownerId',
     type: 'string',
     description: 'User id which used for filter posts by its owner',
-    example: 1,
+    example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
   })
   @ApiOkResponse({
     type: CategoryPictureEntity,
@@ -83,21 +84,16 @@ export class CategoryPictureController {
   @Get(':categoryId/pictures')
   async getPicturesByCategory(
     @Param('categoryId') categoryId: string,
-    @Query() ownerId?: string,
-  ): Promise<CategoryPictureEntity> {
-    return new CategoryPictureEntity(
-      await this.categoryPictureService.getPictures(
-        {
-          id: Number(categoryId),
+    @Query('ownerId') ownerId: string,
+  ): Promise<PictureEntity[]> {
+    const pictures = await this.categoryPictureService.getPictures({
+      categories: {
+        some: {
+          catId: Number(categoryId),
         },
-        {
-          pictures: {
-            where: {
-              ownerId: Number(ownerId),
-            },
-          },
-        },
-      ),
-    );
+      },
+      ownerId: ownerId,
+    });
+    return pictures.map((picture) => new PictureEntity(picture));
   }
 }
