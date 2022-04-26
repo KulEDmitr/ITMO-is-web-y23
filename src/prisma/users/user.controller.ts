@@ -22,6 +22,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './models/create-user.dto';
 import { UpdateUserDto } from './models/update-user.dto';
 import { UserEntity } from './models/user.entity';
+import { PostEntity } from '../posts/models/post.entity';
+import { PictureEntity } from '../pictures/models/picture.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -56,7 +58,7 @@ export class UserController {
     name: 'id',
     type: 'string',
     description: 'Id of user that need to be found',
-    example: '1',
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserEntity> {
@@ -96,7 +98,7 @@ export class UserController {
     name: 'id',
     type: 'string',
     description: 'Id of user that need to be edited',
-    example: '1',
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @Put(':id')
   async editUser(
@@ -104,99 +106,85 @@ export class UserController {
     @Body() data: UpdateUserDto,
   ): Promise<UserEntity> {
     return new UserEntity(
-      await this.userService.updateUser({
-        where: { id: id },
+      await this.userService.updateUser(
+        {
+          id: id,
+        },
         data,
-      }),
+      ),
     );
   }
 
-  // @ApiOperation({
-  //   summary: 'Get all pictures with ownerId equal to given user id',
-  // })
-  // @ApiParam({
-  //   name: 'ownerId',
-  //   type: 'string',
-  //   description: 'Id of user whose pictures need to be found',
-  //   example: '1',
-  // })
-  // @ApiOkResponse({ description: 'Pictures found' })
-  // @ApiBadRequestResponse({
-  //   description: 'The request could not be understood due to malformed syntax.',
-  // })
-  // @ApiForbiddenResponse({ description: 'Access denied' })
-  // @ApiNotFoundResponse({ description: 'Pictures not found' })
-  // @Get(':ownerId/gallery')
-  // async getPictures(@Param() ownerId: string): Promise<PictureModel[]> {
-  //   return this.pictureService.pictures({
-  //     where: {
-  //       ownerId: {
-  //         equals: Number(ownerId),
-  //       },
-  //     },
-  //     orderBy: {
-  //       id: 'asc',
-  //     },
-  //   });
-  // }
-  //
-  // @ApiOperation({
-  //   summary: 'Get all posts with authorId equal to given user id',
-  // })
-  // @ApiOkResponse({ description: 'Posts found' })
-  // @ApiBadRequestResponse({
-  //   description: 'The request could not be understood due to malformed syntax.',
-  // })
-  // @ApiForbiddenResponse({ description: 'Access denied' })
-  // @ApiNotFoundResponse({ description: 'Posts not found' })
-  // @ApiParam({
-  //   name: 'authorId',
-  //   type: 'string',
-  //   description: 'User id of posts author for searching',
-  //   example: '1',
-  // })
-  // @Get(':authorId/feed')
-  // async getFeed(@Param('authorId') authorId: string): Promise<PostModel[]> {
-  //   return this.postService.posts({
-  //     where: {
-  //       authorId: {
-  //         equals: Number(authorId),
-  //       },
-  //     },
-  //     orderBy: {
-  //       id: 'asc',
-  //     },
-  //   });
-  // }
-  //
-  // @ApiOperation({
-  //   summary: 'Get all unpublished posts with authorId equal to given user id ',
-  // })
-  // @ApiOkResponse({ description: 'Posts found' })
-  // @ApiBadRequestResponse({
-  //   description: 'The request could not be understood due to malformed syntax.',
-  // })
-  // @ApiForbiddenResponse({ description: 'Access denied' })
-  // @ApiNotFoundResponse({ description: 'Posts not found' })
-  // @ApiParam({
-  //   name: 'authorId',
-  //   type: 'string',
-  //   description: 'User id of posts author for searching',
-  //   example: '1',
-  // })
-  // @Get(':authorId/drafts')
-  // async getDrafts(@Param('authorId') authorId: string): Promise<PostModel[]> {
-  //   return this.postService.posts({
-  //     where: {
-  //       authorId: {
-  //         equals: Number(authorId),
-  //       },
-  //     },
-  //     orderBy: {
-  //       id: 'asc',
-  //     },
-  //   });
-  // }
+  @ApiOperation({
+    summary: 'Get all pictures with ownerId equal to given user id',
+  })
+  @ApiParam({
+    name: 'ownerId',
+    type: 'string',
+    description: 'Id of user whose pictures need to be found',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiOkResponse({ description: 'Pictures found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Pictures not found' })
+  @Get(':ownerId/gallery')
+  async getPictures(
+    @Param('ownerId') ownerId: string,
+  ): Promise<PictureEntity[]> {
+    const pictures = await this.userService.getPictures({ id: ownerId });
+    return pictures.map((picture) => new PictureEntity(picture));
+  }
+
+  @ApiOperation({
+    summary: 'Get all posts with authorId equal to given user id',
+  })
+  @ApiOkResponse({ description: 'Posts found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Posts not found' })
+  @ApiParam({
+    name: 'authorId',
+    type: 'string',
+    description: 'User id of posts author for searching',
+    example: '1',
+  })
+  @Get(':authorId/feed')
+  async getFeed(@Param('authorId') authorId: string): Promise<PostEntity[]> {
+    const posts = await this.userService.getPosts(
+      { id: authorId },
+      { published: true },
+    );
+    return posts.map((post) => new PostEntity(post));
+  }
+
+  @ApiOperation({
+    summary: 'Get all unpublished posts with authorId equal to given user id ',
+  })
+  @ApiOkResponse({ description: 'Posts found' })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Posts not found' })
+  @ApiParam({
+    name: 'authorId',
+    type: 'string',
+    description: 'User id of posts author for searching',
+    example: '1',
+  })
+  @Get(':authorId/drafts')
+  async getDrafts(@Param('authorId') authorId: string): Promise<PostEntity[]> {
+    const posts = await this.userService.getPosts(
+      { id: authorId },
+      { published: false },
+    );
+    return posts.map((post) => new PostEntity(post));
+  }
 
   @ApiOperation({ summary: 'Delete user by id' })
   @ApiParam({
