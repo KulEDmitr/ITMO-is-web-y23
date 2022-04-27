@@ -33,6 +33,13 @@ export class CategoryPostService {
     return this.prisma.postCategory.create({
       data: {
         name: data.name,
+        posts: {
+          create: data.posts?.map((post) => ({
+            post: {
+              connect: { id: post },
+            },
+          })),
+        },
       },
     });
   }

@@ -67,6 +67,7 @@ export class CategoryPictureController {
     example: '1',
   })
   @ApiQuery({
+    required: false,
     name: 'ownerId',
     type: 'string',
     description: 'User id which used for filter posts by its owner',

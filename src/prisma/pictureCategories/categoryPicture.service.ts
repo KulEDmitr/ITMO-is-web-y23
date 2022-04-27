@@ -21,6 +21,13 @@ export class CategoryPictureService {
     return this.prisma.pictureCategory.create({
       data: {
         name: data.name,
+        pictures: {
+          create: data.pictures?.map((picture) => ({
+            picture: {
+              connect: { id: picture },
+            },
+          })),
+        },
       },
     });
   }
