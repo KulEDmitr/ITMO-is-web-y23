@@ -1,20 +1,23 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumberString, IsPositive, IsString } from 'class-validator';
+import { Post } from '@prisma/client';
 
-export class CreatePostDto {
+export class PostEntity implements Post {
+  @ApiProperty({
+    description: 'The unique identifier of the post',
+    example: 1,
+  })
+  id: number;
+
   @ApiProperty({
     description: 'The title of the Post',
     example: 'my first draft',
   })
-  @IsNotEmpty()
-  @IsString()
   title: string;
 
   @ApiPropertyOptional({
     description: 'The content of the Post',
     example: 'This is a short template of draft',
   })
-  @IsString()
   content: string;
 
   @ApiPropertyOptional({
@@ -22,8 +25,13 @@ export class CreatePostDto {
       'Field, that described is the post available for all users or not',
     default: false,
   })
-  @IsBoolean()
   published: boolean;
+
+  @ApiProperty({
+    description: 'The id of author of the Post',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  authorId: string;
 
   @ApiPropertyOptional({
     description: 'Array of categories belong to the post',
@@ -31,10 +39,7 @@ export class CreatePostDto {
   })
   categories: number[];
 
-  @ApiProperty({
-    description: 'The id of author of the Post',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @IsNotEmpty()
-  authorId: string;
+  constructor(partial: Partial<PostEntity>) {
+    Object.assign(this, partial);
+  }
 }

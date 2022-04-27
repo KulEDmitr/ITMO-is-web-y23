@@ -14,6 +14,12 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
   @IsString()
   content: string;
 
+  @ApiPropertyOptional({
+    description: 'Array of categories belong to the post',
+    example: [1],
+  })
+  categories: number[];
+
   @ApiPropertyOptional({ default: false, example: true })
   @IsBoolean()
   published: boolean;

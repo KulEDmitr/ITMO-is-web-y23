@@ -16,4 +16,16 @@ export class CreateUserDto {
   })
   @IsString()
   name: string;
+
+  @ApiProperty({
+    description: 'The unique login of the User',
+    example: 'JaneDoe',
+  })
+  login: string;
+
+  @ApiProperty({
+    description: 'The password of the User',
+    example: 'jkljlfu7lk86',
+  })
+  password: string;
 }

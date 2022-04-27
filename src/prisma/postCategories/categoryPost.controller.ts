@@ -8,27 +8,52 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiQuery,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { CategoryPost as CategoryPostModel } from '@prisma/client';
 import { CategoryPostService } from './categoryPost.service';
-import { CategoryPostDto } from './models/categoryPost.dto';
+
+import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
+import { CategoryPostEntity } from './models/categoryPost.entity';
+import { PostEntity } from '../posts/models/post.entity';
 
 @ApiTags('postCategories')
-@Controller()
+@Controller('post-categories')
 export class CategoryPostController {
   constructor(private readonly categoryPostService: CategoryPostService) {}
 
   @ApiOperation({ summary: 'Create post category with given parameters' })
-  @ApiOkResponse({ description: 'Category created' })
+  @ApiCreatedResponse({
+    type: CategoryPostEntity,
+    description: 'Category created',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @Post('posts_category')
+  @Post()
   async createCategory(
-    @Body() data: CategoryPostDto,
-  ): Promise<CategoryPostModel> {
-    return this.categoryPostService.createCategoryPost(data);
+    @Body() data: CreateCategoryPostDto,
+  ): Promise<CategoryPostEntity> {
+    return new CategoryPostEntity(
+      await this.categoryPostService.createCategoryPost(data),
+    );
+  }
+
+  @ApiOperation({ summary: 'Get all post categories' })
+  @ApiOkResponse({
+    type: CategoryPostEntity,
+    isArray: true,
+    description: 'Categories found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Pictures not found' })
+  @Get()
+  async getCategories(): Promise<CategoryPostEntity[]> {
+    const categories = await this.categoryPostService.categories();
+    return categories.map((category) => new CategoryPostEntity(category));
   }
 
   @ApiOperation({ summary: 'Get posts by category using given parameters' })
@@ -45,28 +70,28 @@ export class CategoryPostController {
     description: 'Flag, which used for filter posts by it published state',
     example: true,
   })
-  @ApiOkResponse({ description: 'Category found' })
+  @ApiOkResponse({
+    type: CategoryPostEntity,
+    description: 'Category found',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @Get('posts/:categoryId')
+  @Get(':categoryId/posts')
   async getPostsByCategory(
     @Param('categoryId') categoryId: string,
     @Query() published?: boolean,
-  ): Promise<CategoryPostModel> {
-    return this.categoryPostService.getPosts(
-      {
-        id: Number(categoryId),
-      },
-      {
-        posts: {
-          where: {
-            published: published,
-          },
+  ): Promise<PostEntity[]> {
+    const posts = await this.categoryPostService.getPosts({
+      categories: {
+        some: {
+          catId: Number(categoryId),
         },
       },
-    );
+      published: Boolean(published),
+    });
+    return posts.map((post) => new PostEntity(post));
   }
 }

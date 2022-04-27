@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CategoryPicture, Prisma } from '@prisma/client';
-import { CategoryPictureDto } from './models/categoryPicture.dto';
+import { Picture, PictureCategory, Prisma } from '@prisma/client';
+import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 
 @Injectable()
 export class CategoryPictureService {
   constructor(private prisma: PrismaService) {}
 
   async categoryPicture(
-    categoryPictureWhereUniqueInput: Prisma.CategoryPictureWhereUniqueInput,
-  ): Promise<CategoryPicture | null> {
-    return this.prisma.categoryPicture.findUnique({
+    categoryPictureWhereUniqueInput: Prisma.PictureCategoryWhereUniqueInput,
+  ): Promise<PictureCategory | null> {
+    return this.prisma.pictureCategory.findUnique({
       where: categoryPictureWhereUniqueInput,
     });
   }
 
   async createCategoryPicture(
-    data: CategoryPictureDto,
-  ): Promise<CategoryPicture> {
-    return this.prisma.categoryPicture.create({
+    data: CreateCategoryPictureDto,
+  ): Promise<PictureCategory | null> {
+    return this.prisma.pictureCategory.create({
       data: {
         name: data.name,
       },
@@ -26,12 +26,14 @@ export class CategoryPictureService {
   }
 
   async getPictures(
-    categoryPictureWhereUniqueInput: Prisma.CategoryPictureWhereUniqueInput,
-    categoryPictureInclude?: Prisma.CategoryPictureInclude,
-  ): Promise<CategoryPicture> {
-    return this.prisma.categoryPicture.findUnique({
-      where: categoryPictureWhereUniqueInput,
-      include: categoryPictureInclude,
+    pictureWhereInput: Prisma.PictureWhereInput,
+  ): Promise<Picture[] | null> {
+    return this.prisma.picture.findMany({
+      where: pictureWhereInput,
     });
+  }
+
+  async categories(): Promise<PictureCategory[] | null> {
+    return this.prisma.pictureCategory.findMany();
   }
 }

@@ -16,16 +16,16 @@ import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
-import {
-  Picture as PictureModel,
-
-} from '@prisma/client';
 import { PictureService } from './picture.service';
+
 import { CreatePictureDto } from './models/create-picture.dto';
+import { PictureEntity } from './models/picture.entity';
+import { UpdatePictureDto } from './models/update-picture.dto';
 
 @ApiTags('pictures')
-@Controller()
+@Controller('pictures')
 export class PictureController {
   constructor(private readonly pictureService: PictureService) {}
 
@@ -36,89 +36,90 @@ export class PictureController {
     description: 'Id of picture that need to be found',
     example: '1',
   })
-  @ApiOkResponse({ description: 'Picture found' })
+  @ApiOkResponse({
+    type: PictureEntity,
+    description: 'Picture found',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
-  @Get('picture/:id')
-  async getPictureById(@Param('id' ) id: string): Promise<PictureModel> {
-    return this.pictureService.picture({ id: Number(id) });
+  @Get(':id')
+  async getPictureById(@Param('id') id: string): Promise<PictureEntity> {
+    return new PictureEntity(
+      await this.pictureService.picture({ id: Number(id) }),
+    );
   }
 
-  @ApiOperation({
-    summary: 'Get all pictures with ownerId equal to given user id',
+  @ApiOperation({ summary: 'Get pictures' })
+  @ApiOkResponse({
+    type: PictureEntity,
+    isArray: true,
+    description: 'Picture found',
   })
-  @ApiParam({
-    name: 'ownerId',
-    type: 'string',
-    description: 'Id of user whose pictures need to be found',
-    example: '1',
-  })
-  @ApiOkResponse({ description: 'Pictures found' })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Pictures not found' })
-  @Get(':ownerId/gallery')
-  async getPictures(@Param() ownerId: string): Promise<PictureModel[]> {
-    return this.pictureService.pictures({
-      where: {
-        ownerId: {
-          equals: Number(ownerId),
-        },
-      },
-      orderBy: {
-        id: 'asc',
-      },
-    });
+  @Get()
+  async getPictures(): Promise<PictureEntity[]> {
+    const pictures = await this.pictureService.pictures();
+    return pictures.map((picture) => new PictureEntity(picture));
   }
 
   @ApiOperation({ summary: 'Create picture with given parameters' })
-  @ApiOkResponse({ description: 'Picture created' })
+  @ApiCreatedResponse({
+    type: PictureEntity,
+    description: 'Picture created',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @Post('picture/create')
-  async createPicture(
-    @Body() data: CreatePictureDto,
-  ): Promise<PictureModel> {
-    return this.pictureService.createPicture(data);
+  @Post()
+  async createPicture(@Body() data: CreatePictureDto): Promise<PictureEntity> {
+    return new PictureEntity(await this.pictureService.createPicture(data));
   }
 
   @ApiOperation({
     summary:
       'Edit fields for existing picture. All Body parameters are optional',
   })
-  @ApiOkResponse({ description: 'Picture edited' })
+  @ApiCreatedResponse({
+    type: PictureEntity,
+    description: 'Picture edited',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
-  @Put('picture/:id/edit')
+  @Put(':id')
   async editPicture(
     @Param('id') id: string,
-    @Body() data: CreatePictureDto,
-  ): Promise<PictureModel> {
-    return this.pictureService.updatePicture({
-      where: { id: Number(id) },
-      data,
-    });
+    @Body() data: UpdatePictureDto,
+  ): Promise<PictureEntity> {
+    return new PictureEntity(
+      await this.pictureService.updatePicture({ id: Number(id) }, data),
+    );
   }
 
   @ApiOperation({ summary: 'Delete picture by id' })
-  @ApiOkResponse({ description: 'Picture deleted' })
+  @ApiOkResponse({
+    type: PictureEntity,
+    description: 'Picture deleted',
+  })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
-  @Delete('picture/:id/delete')
-  async deletePicture(@Param('id') id: string): Promise<PictureModel> {
-    return this.pictureService.deletePicture({ id: Number(id) });
+  @Delete(':id')
+  async deletePicture(@Param('id') id: string): Promise<PictureEntity> {
+    return new PictureEntity(
+      await this.pictureService.deletePicture({ id: Number(id) }),
+    );
   }
 }

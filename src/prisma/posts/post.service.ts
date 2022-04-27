@@ -16,37 +16,50 @@ export class PostService {
     });
   }
 
-  async posts(params: {
-    where?: Prisma.PostWhereInput;
-    orderBy?: Prisma.PostOrderByWithRelationInput;
-  }): Promise<Post[]> {
-    const { where, orderBy } = params;
+  async posts(
+    where?: Prisma.PostWhereInput,
+    orderBy?: Prisma.PostOrderByWithRelationInput,
+  ): Promise<Post[] | null> {
     return this.prisma.post.findMany({ where, orderBy });
   }
 
-  async createPost(data: CreatePostDto): Promise<Post> {
+  async createPost(data: CreatePostDto): Promise<Post | null> {
     return this.prisma.post.create({
       data: {
         title: data.title,
         content: data.content,
+        published: data.published,
         author: {
-          connect: { id: Number(data.authorId) },
+          connect: { id: data.authorId },
+        },
+        categories: {
+          create: data.categories?.map((cat) => ({
+            category: {
+              connect: { id: cat },
+            },
+          })),
         },
       },
     });
   }
 
-  async updatePost(params: {
-    where: Prisma.PostWhereUniqueInput;
-    data: UpdatePostDto;
-  }): Promise<Post> {
-    const { data, where } = params;
+  async updatePost(
+    where: Prisma.PostWhereUniqueInput,
+    data: UpdatePostDto,
+  ): Promise<Post | null> {
     return this.prisma.post.update({
       where,
       data: {
         title: data.title,
         content: data.content,
         published: data.published,
+        categories: {
+          create: data.categories?.map((cat) => ({
+            category: {
+              connect: { id: cat },
+            },
+          })),
+        },
       },
     });
   }
@@ -56,14 +69,4 @@ export class PostService {
       where,
     });
   }
-
-  // async deleteAllPostsBy(
-  //   where: Prisma.PostWhereInput,
-  //   include?: Prisma.PostInclude,
-  // ) {
-  //   return this.prisma.post.deleteMany({
-  //     include,
-  //     where,
-  //   });
-  // }
 }
