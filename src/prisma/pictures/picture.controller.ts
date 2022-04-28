@@ -32,9 +32,9 @@ export class PictureController {
   @ApiOperation({ summary: 'Get picture by id' })
   @ApiParam({
     name: 'id',
-    type: 'string',
+    type: 'number',
     description: 'Id of picture that need to be found',
-    example: '1',
+    example: 1,
   })
   @ApiOkResponse({
     type: PictureEntity,
@@ -46,9 +46,9 @@ export class PictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
   @Get(':id')
-  async getPictureById(@Param('id') id: string): Promise<PictureEntity> {
+  async getPictureById(@Param('id', ParseIntPipe) id: number): Promise<PictureEntity> {
     return new PictureEntity(
-      await this.pictureService.picture({ id: Number(id) }),
+      await this.pictureService.picture({ id: id }),
     );
   }
 
@@ -96,13 +96,19 @@ export class PictureController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    description: 'Id of picture that need to be found',
+    example: 1,
+  })
   @Put(':id')
   async editPicture(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdatePictureDto,
   ): Promise<PictureEntity> {
     return new PictureEntity(
-      await this.pictureService.updatePicture({ id: Number(id) }, data),
+      await this.pictureService.updatePicture({ id: id }, data),
     );
   }
 
@@ -116,10 +122,18 @@ export class PictureController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    description: 'Id of picture that need to be found',
+    example: 1,
+  })
   @Delete(':id')
-  async deletePicture(@Param('id') id: string): Promise<PictureEntity> {
+  async deletePicture(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PictureEntity> {
     return new PictureEntity(
-      await this.pictureService.deletePicture({ id: Number(id) }),
+      await this.pictureService.deletePicture({ id: id }),
     );
   }
 }

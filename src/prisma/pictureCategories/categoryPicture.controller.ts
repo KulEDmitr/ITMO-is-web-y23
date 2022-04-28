@@ -1,4 +1,4 @@
-import { Post, Controller, Body, Param, Get, Query } from '@nestjs/common';
+import { Post, Controller, Body, Param, Get, Query, ParseIntPipe } from '@nestjs/common';
 import {
   ApiParam,
   ApiOperation,
@@ -61,15 +61,16 @@ export class CategoryPictureController {
   @ApiOperation({ summary: 'Get pictures by category using given parameters' })
   @ApiParam({
     name: 'categoryId',
-    type: 'string',
+    type: 'number',
     description:
       'Id of pictures category that need to be found with pictures in it',
-    example: '1',
+    example: 1,
   })
   @ApiQuery({
+    required: false,
     name: 'ownerId',
     type: 'string',
-    description: 'User id which used for filter posts by its owner',
+    description: 'User id which used for filter pictures by its owner',
     example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
   })
   @ApiOkResponse({
@@ -83,13 +84,13 @@ export class CategoryPictureController {
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/pictures')
   async getPicturesByCategory(
-    @Param('categoryId') categoryId: string,
-    @Query('ownerId') ownerId: string,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Query('ownerId') ownerId?: string,
   ): Promise<PictureEntity[]> {
     const pictures = await this.categoryPictureService.getPictures({
       categories: {
         some: {
-          catId: Number(categoryId),
+          catId: categoryId,
         },
       },
       ownerId: ownerId,

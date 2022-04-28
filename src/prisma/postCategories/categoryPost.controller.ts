@@ -1,4 +1,13 @@
-import { Post, Controller, Body, Param, Get, Query } from '@nestjs/common';
+import {
+  Post,
+  Controller,
+  Body,
+  Param,
+  Get,
+  Query,
+  ParseBoolPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import {
   ApiParam,
   ApiOperation,
@@ -56,18 +65,28 @@ export class CategoryPostController {
     return categories.map((category) => new CategoryPostEntity(category));
   }
 
-  @ApiOperation({ summary: 'Get posts by category using given parameters' })
+  @ApiOperation({
+    summary: 'Get published posts by category using given parameters',
+  })
   @ApiParam({
     name: 'categoryId',
-    type: 'string',
+    type: 'number',
     description:
       'Id of posts category that need to be found with all posts in it',
-    example: '1',
+    example: 1,
   })
   @ApiQuery({
+    required: false,
+    name: 'authorId',
+    type: 'string',
+    description: 'User id which used for filter posts by its owner',
+    example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
+  })
+  @ApiQuery({
+    required: false,
     name: 'published',
     type: 'boolean',
-    description: 'Flag, which used for filter posts by it published state',
+    description: 'flag for filter posts by its publicate state',
     example: true,
   })
   @ApiOkResponse({
@@ -81,16 +100,18 @@ export class CategoryPostController {
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/posts')
   async getPostsByCategory(
-    @Param('categoryId') categoryId: string,
-    @Query() published?: boolean,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Query('authorId') authorId?: string,
+    @Query('published', ParseBoolPipe) published?: boolean,
   ): Promise<PostEntity[]> {
     const posts = await this.categoryPostService.getPosts({
+      published: published,
       categories: {
         some: {
-          catId: Number(categoryId),
+          catId: categoryId,
         },
       },
-      published: Boolean(published),
+      authorId: authorId,
     });
     return posts.map((post) => new PostEntity(post));
   }

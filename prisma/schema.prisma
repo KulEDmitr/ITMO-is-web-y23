@@ -13,17 +13,17 @@ datasource db {
 
 model User {
   id       String    @id @default(uuid()) @db.Uuid
-  login    String    @unique @db.VarChar(255)
-  password String    @db.VarChar(255)
+  login    String    @unique
+  password String
   email    String    @unique
-  name     String?   @db.VarChar(255)
+  name     String?
   posts    Post[]
   pictures Picture[]
 }
 
 model Post {
   id         Int               @id @default(autoincrement())
-  title      String            @db.VarChar(255)
+  title      String
   content    String?
   published  Boolean?          @default(false) @db.Boolean
   author     User              @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -42,13 +42,13 @@ model CategoryOnPosts {
 
 model PostCategory {
   id    Int               @id @default(autoincrement())
-  name  String            @unique @db.VarChar(255)
+  name  String            @unique
   posts CategoryOnPosts[]
 }
 
 model Picture {
   id          Int                  @id @default(autoincrement())
-  title       String               @db.VarChar(255)
+  title       String
   image       String
   description String?
   owner       User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -67,6 +67,6 @@ model CategoryOnPictures {
 
 model PictureCategory {
   id       Int                  @id @default(autoincrement())
-  name     String               @unique @db.VarChar(255)
+  name     String               @unique
   pictures CategoryOnPictures[]
 }
