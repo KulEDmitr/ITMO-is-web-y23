@@ -56,7 +56,9 @@ export class CategoryPostController {
     return categories.map((category) => new CategoryPostEntity(category));
   }
 
-  @ApiOperation({ summary: 'Get posts by category using given parameters' })
+  @ApiOperation({
+    summary: 'Get published posts by category using given parameters',
+  })
   @ApiParam({
     name: 'categoryId',
     type: 'string',
@@ -65,10 +67,11 @@ export class CategoryPostController {
     example: '1',
   })
   @ApiQuery({
-    name: 'published',
-    type: 'boolean',
-    description: 'Flag, which used for filter posts by it published state',
-    example: true,
+    required: false,
+    name: 'authorId',
+    type: 'string',
+    description: 'User id which used for filter posts by its owner',
+    example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
   })
   @ApiOkResponse({
     type: CategoryPostEntity,
@@ -82,15 +85,16 @@ export class CategoryPostController {
   @Get(':categoryId/posts')
   async getPostsByCategory(
     @Param('categoryId') categoryId: string,
-    @Query() published?: boolean,
+    @Query('authorId') authorId?: string,
   ): Promise<PostEntity[]> {
     const posts = await this.categoryPostService.getPosts({
+      published: true,
       categories: {
         some: {
           catId: Number(categoryId),
         },
       },
-      published: Boolean(published),
+      authorId: authorId,
     });
     return posts.map((post) => new PostEntity(post));
   }

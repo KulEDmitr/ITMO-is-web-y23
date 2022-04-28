@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  MinLength,
 } from 'class-validator';
 
 export class CreateCategoryPostDto {
@@ -12,7 +11,6 @@ export class CreateCategoryPostDto {
     description: 'The name of the post category',
     example: 'diary',
   })
-  @MinLength(5)
   @IsNotEmpty()
   @IsString()
   name: string;

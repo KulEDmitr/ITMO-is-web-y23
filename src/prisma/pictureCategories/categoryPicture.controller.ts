@@ -70,7 +70,7 @@ export class CategoryPictureController {
     required: false,
     name: 'ownerId',
     type: 'string',
-    description: 'User id which used for filter posts by its owner',
+    description: 'User id which used for filter pictures by its owner',
     example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
   })
   @ApiOkResponse({
@@ -85,7 +85,7 @@ export class CategoryPictureController {
   @Get(':categoryId/pictures')
   async getPicturesByCategory(
     @Param('categoryId') categoryId: string,
-    @Query('ownerId') ownerId: string,
+    @Query('ownerId') ownerId?: string,
   ): Promise<PictureEntity[]> {
     const pictures = await this.categoryPictureService.getPictures({
       categories: {
