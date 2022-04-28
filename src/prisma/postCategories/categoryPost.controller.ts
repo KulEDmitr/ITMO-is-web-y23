@@ -1,4 +1,13 @@
-import { Post, Controller, Body, Param, Get, Query } from '@nestjs/common';
+import {
+  Post,
+  Controller,
+  Body,
+  Param,
+  Get,
+  Query,
+  ParseBoolPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import {
   ApiParam,
   ApiOperation,
@@ -61,10 +70,10 @@ export class CategoryPostController {
   })
   @ApiParam({
     name: 'categoryId',
-    type: 'string',
+    type: 'number',
     description:
       'Id of posts category that need to be found with all posts in it',
-    example: '1',
+    example: 1,
   })
   @ApiQuery({
     required: false,
@@ -72,6 +81,13 @@ export class CategoryPostController {
     type: 'string',
     description: 'User id which used for filter posts by its owner',
     example: '0e848a90-379a-4b50-a9f4-5b23e51140fd',
+  })
+  @ApiQuery({
+    required: false,
+    name: 'published',
+    type: 'boolean',
+    description: 'flag for filter posts by its publicate state',
+    example: true,
   })
   @ApiOkResponse({
     type: CategoryPostEntity,
@@ -84,14 +100,15 @@ export class CategoryPostController {
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/posts')
   async getPostsByCategory(
-    @Param('categoryId') categoryId: string,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
     @Query('authorId') authorId?: string,
+    @Query('published', ParseBoolPipe) published?: boolean,
   ): Promise<PostEntity[]> {
     const posts = await this.categoryPostService.getPosts({
-      published: true,
+      published: published,
       categories: {
         some: {
-          catId: Number(categoryId),
+          catId: categoryId,
         },
       },
       authorId: authorId,

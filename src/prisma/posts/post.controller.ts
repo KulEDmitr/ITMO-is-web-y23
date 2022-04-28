@@ -5,7 +5,7 @@ import {
   Post,
   Body,
   Put,
-  Delete,
+  Delete, ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiParam,
@@ -40,13 +40,13 @@ export class PostController {
   @ApiNotFoundResponse({ description: 'Post not found' })
   @ApiParam({
     name: 'id',
-    type: 'string',
+    type: 'number',
     description: 'Id of post that need to be found',
-    example: '1',
+    example: 1,
   })
   @Get(':id')
-  async getPostById(@Param('id') id: string): Promise<PostEntity> {
-    return new PostEntity(await this.postService.findPost({ id: Number(id) }));
+  async getPostById(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
+    return new PostEntity(await this.postService.findPost({ id: id }));
   }
 
   @ApiOperation({
@@ -96,26 +96,26 @@ export class PostController {
   @ApiNotFoundResponse({ description: 'Post not found' })
   @ApiParam({
     name: 'id',
-    type: 'string',
+    type: 'number',
     description: 'Id of post that need to be edited',
-    example: '1',
+    example: 1,
   })
   @Put(':id')
   async editPost(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdatePostDto,
   ): Promise<PostEntity> {
     return new PostEntity(
-      await this.postService.updatePost({ id: Number(id) }, data),
+      await this.postService.updatePost({ id: id }, data),
     );
   }
 
   @ApiOperation({ summary: 'Delete post by id' })
   @ApiParam({
     name: 'id',
-    type: 'string',
+    type: 'number',
     description: 'Id of post that need to be deleted',
-    example: '1',
+    example: 1,
   })
   @ApiOkResponse({
     type: PostEntity,
@@ -127,9 +127,9 @@ export class PostController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
   @Delete(':id')
-  async deletePost(@Param('id') id: string): Promise<PostEntity> {
+  async deletePost(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
     return new PostEntity(
-      await this.postService.deletePost({ id: Number(id) }),
+      await this.postService.deletePost({ id: id }),
     );
   }
 }

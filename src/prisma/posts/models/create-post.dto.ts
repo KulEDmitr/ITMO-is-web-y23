@@ -3,7 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
-  IsOptional,
+  IsOptional, IsPositive,
   IsString,
   IsUUID,
 } from 'class-validator';
@@ -40,6 +40,7 @@ export class CreatePostDto {
   })
   @IsOptional()
   @IsArray()
+  @IsPositive({ each: true })
   categories: number[];
 
   @ApiProperty({

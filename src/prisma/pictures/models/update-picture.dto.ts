@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { CreatePictureDto } from './create-picture.dto';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class UpdatePictureDto extends PartialType(CreatePictureDto) {
   @ApiPropertyOptional({
@@ -33,5 +33,6 @@ export class UpdatePictureDto extends PartialType(CreatePictureDto) {
   })
   @IsOptional()
   @IsArray()
+  @IsPositive({ each: true })
   categories: number[];
 }

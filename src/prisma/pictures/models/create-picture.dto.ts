@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsPositive, IsString, IsUrl, IsUUID } from 'class-validator';
 
 export class CreatePictureDto {
   @ApiProperty({
@@ -32,6 +32,7 @@ export class CreatePictureDto {
   })
   @IsOptional()
   @IsArray()
+  @IsPositive({ each: true })
   categories: number[];
 
   @ApiProperty({

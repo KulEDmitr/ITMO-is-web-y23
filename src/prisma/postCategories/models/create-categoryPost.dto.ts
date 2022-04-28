@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   IsNotEmpty,
-  IsOptional,
+  IsOptional, IsPositive,
   IsString,
 } from 'class-validator';
 
@@ -21,5 +21,6 @@ export class CreateCategoryPostDto {
   })
   @IsOptional()
   @IsArray()
+  @IsPositive({ each: true })
   posts: number[];
 }
