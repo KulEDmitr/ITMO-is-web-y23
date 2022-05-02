@@ -45,7 +45,7 @@ export class PostController {
     example: 1,
   })
   @Get(':id')
-  async getPostById(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
+  async getPostById(@Param('id') id: number): Promise<PostEntity> {
     return new PostEntity(await this.postService.findPost({ id: id }));
   }
 
@@ -102,7 +102,7 @@ export class PostController {
   })
   @Put(':id')
   async editPost(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() data: UpdatePostDto,
   ): Promise<PostEntity> {
     return new PostEntity(
@@ -127,7 +127,7 @@ export class PostController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
   @Delete(':id')
-  async deletePost(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
+  async deletePost(@Param('id') id: number): Promise<PostEntity> {
     return new PostEntity(
       await this.postService.deletePost({ id: id }),
     );

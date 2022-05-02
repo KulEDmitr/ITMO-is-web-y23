@@ -100,9 +100,9 @@ export class CategoryPostController {
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/posts')
   async getPostsByCategory(
-    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Param('categoryId') categoryId: number,
     @Query('authorId') authorId?: string,
-    @Query('published', ParseBoolPipe) published?: boolean,
+    @Query('published') published?: boolean,
   ): Promise<PostEntity[]> {
     const posts = await this.categoryPostService.getPosts({
       published: published,

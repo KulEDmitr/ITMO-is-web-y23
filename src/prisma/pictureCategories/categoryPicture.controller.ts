@@ -84,7 +84,7 @@ export class CategoryPictureController {
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/pictures')
   async getPicturesByCategory(
-    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Param('categoryId') categoryId: number,
     @Query('ownerId') ownerId?: string,
   ): Promise<PictureEntity[]> {
     const pictures = await this.categoryPictureService.getPictures({

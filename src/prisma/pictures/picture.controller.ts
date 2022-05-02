@@ -46,7 +46,7 @@ export class PictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Picture not found' })
   @Get(':id')
-  async getPictureById(@Param('id', ParseIntPipe) id: number): Promise<PictureEntity> {
+  async getPictureById(@Param('id') id: number): Promise<PictureEntity> {
     return new PictureEntity(
       await this.pictureService.picture({ id: id }),
     );
@@ -104,7 +104,7 @@ export class PictureController {
   })
   @Put(':id')
   async editPicture(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() data: UpdatePictureDto,
   ): Promise<PictureEntity> {
     return new PictureEntity(
@@ -130,7 +130,7 @@ export class PictureController {
   })
   @Delete(':id')
   async deletePicture(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
   ): Promise<PictureEntity> {
     return new PictureEntity(
       await this.pictureService.deletePicture({ id: id }),
