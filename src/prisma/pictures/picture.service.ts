@@ -8,6 +8,10 @@ import { UpdatePictureDto } from './models/update-picture.dto';
 export class PictureService {
   constructor(private prisma: PrismaService) {}
 
+  async findPictureById(id: number): Promise<Picture | null> {
+    return this.picture({ id: id });
+  }
+
   async picture(
     pictureWhereUniqueInput: Prisma.PictureWhereUniqueInput,
   ): Promise<Picture | null> {
@@ -40,6 +44,13 @@ export class PictureService {
     });
   }
 
+  async updatePictureById(
+    id: number,
+    data: UpdatePictureDto,
+  ): Promise<Picture | null> {
+    return this.updatePicture({ id: id }, data);
+  }
+
   async updatePicture(
     where: Prisma.PictureWhereUniqueInput,
     data: UpdatePictureDto,
@@ -59,6 +70,10 @@ export class PictureService {
         },
       },
     });
+  }
+
+  async deletePictureById(id: number): Promise<Picture | null> {
+    return this.deletePicture({ id: id });
   }
 
   async deletePicture(

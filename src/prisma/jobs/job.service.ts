@@ -8,6 +8,10 @@ import { UpdateJobDto } from './models/update-job.dto';
 export class JobService {
   constructor(private prisma: PrismaService) {}
 
+  async findJobById(id: number): Promise<JobPlace | null> {
+    return this.findJob({ id: id });
+  }
+
   async findJob(
     jobWhereUniqueInput: Prisma.JobPlaceWhereUniqueInput,
   ): Promise<JobPlace | null> {
@@ -37,6 +41,13 @@ export class JobService {
     });
   }
 
+  async updateJobById(
+    id: number,
+    data: UpdateJobDto,
+  ): Promise<JobPlace | null> {
+    return this.updateJob({ id: id }, data);
+  }
+
   async updateJob(
     where: Prisma.JobPlaceWhereUniqueInput,
     data: UpdateJobDto,
@@ -50,6 +61,10 @@ export class JobService {
         hidden: data.hidden,
       },
     });
+  }
+
+  async deleteJobById(id: number): Promise<JobPlace | null> {
+    return this.deleteJob({ id: id });
   }
 
   async deleteJob(where: Prisma.JobPlaceWhereUniqueInput): Promise<JobPlace> {

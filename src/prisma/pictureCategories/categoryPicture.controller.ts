@@ -1,4 +1,13 @@
-import { Post, Controller, Body, Param, Get, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Post,
+  Controller,
+  Body,
+  Param,
+  Get,
+  Query,
+  UseFilters,
+} from '@nestjs/common';
+
 import {
   ApiParam,
   ApiOperation,
@@ -9,12 +18,17 @@ import {
   ApiNotFoundResponse,
   ApiQuery,
   ApiCreatedResponse,
+  ApiConflictResponse,
 } from '@nestjs/swagger';
+
 import { CategoryPictureService } from './categoryPicture.service';
 
 import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 import { CategoryPictureEntity } from './models/categoryPicture.entity';
 import { PictureEntity } from '../pictures/models/picture.entity';
+
+import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('pictureCategories')
 @Controller('picture-categories')
@@ -32,6 +46,10 @@ export class CategoryPictureController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiConflictResponse({
+    description: 'Some of given parameters should be unique but they are not',
+  })
+  @UseFilters(UniqueConstrainedViolationFilter)
   @Post()
   async createCategory(
     @Body() data: CreateCategoryPictureDto,
@@ -82,19 +100,16 @@ export class CategoryPictureController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
+  @UseFilters(RecordExistedFilter)
   @Get(':categoryId/pictures')
-  async getPicturesByCategory(
+  async getPicturesByCategoryId(
     @Param('categoryId') categoryId: number,
     @Query('ownerId') ownerId?: string,
   ): Promise<PictureEntity[]> {
-    const pictures = await this.categoryPictureService.getPictures({
-      categories: {
-        some: {
-          catId: categoryId,
-        },
-      },
-      ownerId: ownerId,
-    });
+    const pictures = await this.categoryPictureService.getPicturesByCategory(
+      categoryId,
+      ownerId,
+    );
     return pictures.map((picture) => new PictureEntity(picture));
   }
 }

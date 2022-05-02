@@ -5,9 +5,9 @@ import {
   Param,
   Get,
   Query,
-  ParseBoolPipe,
-  ParseIntPipe,
+  UseFilters,
 } from '@nestjs/common';
+
 import {
   ApiParam,
   ApiOperation,
@@ -18,12 +18,16 @@ import {
   ApiNotFoundResponse,
   ApiQuery,
   ApiCreatedResponse,
+  ApiConflictResponse,
 } from '@nestjs/swagger';
+
 import { CategoryPostService } from './categoryPost.service';
 
 import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
 import { CategoryPostEntity } from './models/categoryPost.entity';
 import { PostEntity } from '../posts/models/post.entity';
+
+import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
 
 @ApiTags('postCategories')
 @Controller('post-categories')
@@ -39,6 +43,10 @@ export class CategoryPostController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiConflictResponse({
+    description: 'Some of given parameters should be unique but they are not',
+  })
+  @UseFilters(UniqueConstrainedViolationFilter)
   @Post()
   async createCategory(
     @Body() data: CreateCategoryPostDto,
@@ -99,20 +107,16 @@ export class CategoryPostController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @Get(':categoryId/posts')
-  async getPostsByCategory(
+  async getPostsByCategoryId(
     @Param('categoryId') categoryId: number,
     @Query('authorId') authorId?: string,
     @Query('published') published?: boolean,
   ): Promise<PostEntity[]> {
-    const posts = await this.categoryPostService.getPosts({
-      published: published,
-      categories: {
-        some: {
-          catId: categoryId,
-        },
-      },
-      authorId: authorId,
-    });
+    const posts = await this.categoryPostService.getPostsByCategory(
+      categoryId,
+      published,
+      authorId,
+    );
     return posts.map((post) => new PostEntity(post));
   }
 }

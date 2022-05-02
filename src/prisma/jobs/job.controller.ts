@@ -8,6 +8,7 @@ import {
   Delete,
   UseFilters,
 } from '@nestjs/common';
+
 import {
   ApiParam,
   ApiOperation,
@@ -19,17 +20,37 @@ import {
   ApiCreatedResponse,
   ApiConflictResponse,
 } from '@nestjs/swagger';
+
 import { JobService } from './job.service';
 
 import { CreateJobDto } from './models/create-job.dto';
 import { UpdateJobDto } from './models/update-job.dto';
 import { JobEntity } from './models/job.entity';
+
 import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
 
-@ApiTags('posts')
-@Controller('posts')
+@ApiTags('jobs')
+@Controller('jobs')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
+
+  @ApiOperation({ summary: 'Create job with given parameters' })
+  @ApiCreatedResponse({
+    type: JobEntity,
+    description: 'Job place created',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiConflictResponse({
+    description: 'Some of given parameters should be unique but they are not',
+  })
+  @UseFilters(UniqueConstrainedViolationFilter)
+  @Post()
+  async createJobPlace(@Body() data: CreateJobDto): Promise<JobEntity> {
+    return new JobEntity(await this.jobService.createJob(data));
+  }
 
   @ApiOperation({ summary: 'Get job place by id' })
   @ApiOkResponse({
@@ -49,7 +70,7 @@ export class JobController {
   })
   @Get(':id')
   async getJobById(@Param('id') id: number): Promise<JobEntity> {
-    return new JobEntity(await this.jobService.findJob({ id: id }));
+    return new JobEntity(await this.jobService.findJobById(id));
   }
 
   @ApiOperation({
@@ -69,24 +90,6 @@ export class JobController {
   async getJobs(): Promise<JobEntity[]> {
     const posts = await this.jobService.jobs();
     return posts.map((post) => new JobEntity(post));
-  }
-
-  @ApiOperation({ summary: 'Create job with given parameters' })
-  @ApiCreatedResponse({
-    type: JobEntity,
-    description: 'Job place created',
-  })
-  @ApiBadRequestResponse({
-    description: 'The request could not be understood due to malformed syntax.',
-  })
-  @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiConflictResponse({
-    description: 'Some of given parameters should be unique but they are not',
-  })
-  @UseFilters(UniqueConstrainedViolationFilter)
-  @Post()
-  async createDraft(@Body() data: CreateJobDto): Promise<JobEntity> {
-    return new JobEntity(await this.jobService.createJob(data));
   }
 
   @ApiOperation({
@@ -109,11 +112,11 @@ export class JobController {
     example: 1,
   })
   @Put(':id')
-  async editPost(
+  async editJobPlaceById(
     @Param('id') id: number,
     @Body() data: UpdateJobDto,
   ): Promise<JobEntity> {
-    return new JobEntity(await this.jobService.updateJob({ id: id }, data));
+    return new JobEntity(await this.jobService.updateJobById(id, data));
   }
 
   @ApiOperation({ summary: 'Delete job place by id' })
@@ -133,7 +136,7 @@ export class JobController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
   @Delete(':id')
-  async deletePost(@Param('id') id: number): Promise<JobEntity> {
-    return new JobEntity(await this.jobService.deleteJob({ id: id }));
+  async deleteJobPlaceById(@Param('id') id: number): Promise<JobEntity> {
+    return new JobEntity(await this.jobService.deleteJobById(id));
   }
 }
