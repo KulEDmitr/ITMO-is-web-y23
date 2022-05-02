@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { User, Prisma, Post, Picture } from '@prisma/client';
+import { User, Prisma, Post, Picture, JobPlace } from '@prisma/client';
 import { CreateUserDto } from './models/create-user.dto';
 import { UpdateUserDto } from './models/update-user.dto';
 
@@ -67,6 +67,19 @@ export class UserService {
       })
       .pictures({
         where: pictureWhereInput,
+      });
+  }
+
+  async getJobs(
+    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+    jobWhereInput?: Prisma.JobPlaceWhereInput,
+  ): Promise<JobPlace[] | null> {
+    return this.prisma.user
+      .findUnique({
+        where: userWhereUniqueInput,
+      })
+      .jobs({
+        where: jobWhereInput,
       });
   }
 
