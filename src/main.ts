@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app/app.module';
@@ -13,6 +13,8 @@ import {
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaClientExceptionFilter } from './prisma-client-exception.filter';
 
 
 async function bootstrap() {
@@ -35,6 +37,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const config = new DocumentBuilder()
     .setTitle('Simple blog')

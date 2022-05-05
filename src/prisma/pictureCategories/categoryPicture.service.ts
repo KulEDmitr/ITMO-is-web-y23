@@ -13,6 +13,9 @@ export class CategoryPictureService {
     categoryId: number,
     ownerId: string,
   ): Promise<Picture[] | null> {
+    await this.checkUser({ id: ownerId });
+    await this.checkCategory({ id: categoryId });
+
     return await this.getPictures({
       categories: {
         some: {
@@ -34,18 +37,14 @@ export class CategoryPictureService {
   async createCategoryPicture(
     data: CreateCategoryPictureDto,
   ): Promise<PictureCategory | null> {
-    const cat = await this.categoryPicture({ name: data.name });
-    if (cat != null) {
-      throw new AlreadyExistException(
-        'Category with name: "' + data.name + '" already exist in system',
-      );
-    }
+    await this.checkCategory({ name: data.name });
+    const exist_pic = await this.checkPictures(data.pictures);
 
     return this.prisma.pictureCategory.create({
       data: {
         name: data.name,
         pictures: {
-          create: data.pictures?.map((picture) => ({
+          create: exist_pic?.map((picture) => ({
             picture: {
               connect: { id: picture },
             },
@@ -58,16 +57,7 @@ export class CategoryPictureService {
   async getPictures(
     pictureWhereInput: Prisma.PictureWhereInput,
   ): Promise<Picture[] | null> {
-    const user: User | null = await this.prisma.user.findUnique({
-      where: {
-        id: pictureWhereInput.ownerId.toString(),
-      },
-    });
-    if (user == null) {
-      throw new NotFoundException(
-        'User with id: "' + pictureWhereInput.ownerId + '" does not exist',
-      );
-    }
+    await this.checkUser({ id: pictureWhereInput.ownerId.toString() });
 
     return this.prisma.picture.findMany({
       where: pictureWhereInput,
@@ -76,5 +66,32 @@ export class CategoryPictureService {
 
   async categories(): Promise<PictureCategory[] | null> {
     return this.prisma.pictureCategory.findMany();
+  }
+
+  private async checkCategory(where: Prisma.PictureCategoryWhereUniqueInput) {
+    const cat = await this.categoryPicture(where);
+    if (cat != null) {
+      throw new AlreadyExistException(
+        'Category with data: "' + where + '" already exist in system',
+      );
+    }
+  }
+
+  private async checkUser(where: Prisma.UserWhereUniqueInput) {
+    const user: User | null = await this.prisma.user.findUnique({
+      where,
+    });
+    if (user == null) {
+      throw new NotFoundException(
+        'User with data: "' + where + '" does not exist',
+      );
+    }
+  }
+
+  private async checkPictures(pictures?: number[]): Promise<number[] | null> {
+    const exist_pic = pictures?.filter(
+      (pic) => this.prisma.picture.findUnique({ where: { id: pic } }) != null,
+    );
+    return exist_pic.length == 0 ? undefined : exist_pic;
   }
 }
