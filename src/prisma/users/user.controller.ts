@@ -30,7 +30,7 @@ import { PostEntity } from '../posts/models/post.entity';
 import { CreateUserDto } from './models/create-user.dto';
 import { UpdateUserDto } from './models/update-user.dto';
 
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('users')
 @Controller('users')
@@ -49,7 +49,7 @@ export class UserController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post()
   async signupUser(@Body() userData: CreateUserDto): Promise<UserEntity> {
     return new UserEntity(await this.userService.createUser(userData));
@@ -108,6 +108,7 @@ export class UserController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Pictures not found' })
+  @UseFilters(RecordExistedFilter)
   @Get(':ownerId/gallery')
   async getPictures(
     @Param('ownerId') ownerId: string,
@@ -131,6 +132,7 @@ export class UserController {
     description: 'User id of posts author for searching',
     example: '1',
   })
+  @UseFilters(RecordExistedFilter)
   @Get(':authorId/feed')
   async getFeed(@Param('authorId') authorId: string): Promise<PostEntity[]> {
     const posts = await this.userService.getPublishedPostsByAuthorId(authorId);
@@ -152,6 +154,7 @@ export class UserController {
     description: 'User id of posts author for searching',
     example: '1',
   })
+  @UseFilters(RecordExistedFilter)
   @Get(':authorId/drafts')
   async getDrafts(@Param('authorId') authorId: string): Promise<PostEntity[]> {
     const posts = await this.userService.getUnpublishedPostsByAuthorId(
@@ -175,6 +178,7 @@ export class UserController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Job places not found' })
+  @UseFilters(RecordExistedFilter)
   @Get(':workerId/jobs')
   async getJobs(@Param('workerId') workerId: string): Promise<JobEntity[]> {
     const jobs = await this.userService.getJobsByWorkerId(workerId);
@@ -199,6 +203,7 @@ export class UserController {
     description: 'Id of user that need to be edited',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
+  @UseFilters(RecordExistedFilter)
   @Put(':id')
   async editUserById(
     @Param('id') id: string,

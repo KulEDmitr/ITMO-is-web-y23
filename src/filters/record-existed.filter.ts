@@ -17,8 +17,14 @@ export class RecordExistedFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     switch (exception.code) {
       case 'P2001':
-        response.status(HttpStatus.CONFLICT).json({
+        response.status(HttpStatus.NOT_FOUND).json({
           statusCode: HttpStatus.NOT_FOUND,
+          message: exception.message,
+        });
+        break;
+      case 'P2002':
+        response.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
           message: exception.message,
         });
         break;
