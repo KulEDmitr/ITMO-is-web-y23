@@ -4,11 +4,11 @@ import { ApiExcludeController } from '@nestjs/swagger';
 @ApiExcludeController()
 @Controller()
 export class AppController {
-  @Get()
-  @Render('pages/index1')
-  root() {
-    return {};
-  }
+  // @Get()
+  // @Render('pages/index1')
+  // root() {
+  //   return {};
+  // }
 
   @Get('auth')
   @Render('pages/loginForm')

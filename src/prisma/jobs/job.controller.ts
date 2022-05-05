@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseFilters,
+  Res,
 } from '@nestjs/common';
 
 import {
@@ -19,6 +20,7 @@ import {
   ApiNotFoundResponse,
   ApiCreatedResponse,
   ApiConflictResponse,
+  ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 
 import { JobService } from './job.service';
@@ -30,7 +32,7 @@ import { JobEntity } from './models/job.entity';
 import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
 
 @ApiTags('jobs')
-@Controller('jobs')
+@Controller()
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
@@ -47,7 +49,7 @@ export class JobController {
     description: 'Some of given parameters should be unique but they are not',
   })
   @UseFilters(UniqueConstrainedViolationFilter)
-  @Post()
+  @Post('jobs')
   async createJobPlace(@Body() data: CreateJobDto): Promise<JobEntity> {
     return new JobEntity(await this.jobService.createJob(data));
   }
@@ -68,7 +70,7 @@ export class JobController {
     description: 'Id of job place that need to be found',
     example: 1,
   })
-  @Get(':id')
+  @Get('jobs/:id')
   async getJobById(@Param('id') id: number): Promise<JobEntity> {
     return new JobEntity(await this.jobService.findJobById(id));
   }
@@ -86,10 +88,13 @@ export class JobController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Posts not found' })
-  @Get()
-  async getJobs(): Promise<JobEntity[]> {
+  @Get('jobs')
+  async getJobs(@Res() res) {
     const posts = await this.jobService.jobs();
-    return posts.map((post) => new JobEntity(post));
+    res.render('pages/jobs', {
+      jobPlace: posts.map((post) => new JobEntity(post)),
+      add_styles: '<link rel="stylesheet" href ="css/grid.css">',
+    });
   }
 
   @ApiOperation({
@@ -111,7 +116,7 @@ export class JobController {
     description: 'Id of job that need to be edited',
     example: 1,
   })
-  @Put(':id')
+  @Put('jobs/:id')
   async editJobPlaceById(
     @Param('id') id: number,
     @Body() data: UpdateJobDto,
@@ -135,8 +140,17 @@ export class JobController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
-  @Delete(':id')
+  @Delete('jobs/:id')
   async deleteJobPlaceById(@Param('id') id: number): Promise<JobEntity> {
     return new JobEntity(await this.jobService.deleteJobById(id));
+  }
+
+  @ApiExcludeEndpoint()
+  @Get()
+  async getNJobs(@Res() res) {
+    const posts = await this.jobService.getMainJobs(3);
+    res.render('pages/index1', {
+      jobPlace: posts.map((post) => new JobEntity(post)),
+    });
   }
 }

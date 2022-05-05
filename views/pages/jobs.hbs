@@ -1,0 +1,25 @@
+<section class="section gallery">
+  <div class="inner">
+    <div class="section__header" id="gallery">
+      <h2 class="section__title">Должности</h2>
+    </div>
+
+    <div class="grid">
+      {{#each jobPlace}}
+        <div class="card job__card">
+          <a class="link nav__link" href="/jobs/{{id}}">
+            <div class="job__header">
+              <h3 class="job__position">{{position}}</h3>
+            </div>
+
+            <div class="job__place">{{place}}</div>
+            <div class="job__time">
+              <span>{{startTimeStr}}</span> -
+              <span>{{endTimeStr}}</span>
+            </div>
+          </a>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</section>

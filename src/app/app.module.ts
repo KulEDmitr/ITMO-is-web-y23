@@ -8,6 +8,7 @@ import { CategoryPostModule } from '../prisma/postCategories/categoryPost.module
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from '../prisma/prisma.module';
+import { JobModule } from '../prisma/jobs/job.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PrismaModule } from '../prisma/prisma.module';
     PrismaModule,
     UserModule,
     PostModule,
+    JobModule,
     PictureModule,
     CategoryPictureModule,
     CategoryPostModule,

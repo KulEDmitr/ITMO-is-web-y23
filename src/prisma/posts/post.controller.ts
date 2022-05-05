@@ -6,7 +6,7 @@ import {
   Body,
   Put,
   Delete,
-  UseFilters,
+  UseFilters, Res,
 } from '@nestjs/common';
 
 import {
@@ -18,7 +18,7 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiCreatedResponse,
-  ApiConflictResponse,
+  ApiConflictResponse, ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 
 import { PostService } from './post.service';
@@ -86,10 +86,20 @@ export class PostController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Posts not found' })
-  @Get()
+  @Get('/published')
   async getPublishedPosts(): Promise<PostEntity[]> {
     const posts = await this.postService.getPublishedPosts();
     return posts.map((post) => new PostEntity(post));
+  }
+
+  @ApiExcludeEndpoint()
+  @Get('/blog')
+  async getFeed(@Res() res) {
+    const posts = await this.postService.posts();
+    res.render('pages/blog', {
+      posts: posts.map((post) => new PostEntity(post)),
+      add_styles: '<link rel="stylesheet" href ="css/grid.css">',
+    });
   }
 
   @ApiOperation({

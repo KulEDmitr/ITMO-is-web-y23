@@ -175,7 +175,7 @@ export class UserController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Job places not found' })
-  @Get(':ownerId/jobs')
+  @Get(':workerId/jobs')
   async getJobs(@Param('workerId') workerId: string): Promise<JobEntity[]> {
     const jobs = await this.userService.getJobsByWorkerId(workerId);
     return jobs.map((job) => new JobEntity(job));

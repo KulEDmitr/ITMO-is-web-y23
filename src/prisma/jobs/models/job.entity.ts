@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { JobPlace } from '@prisma/client';
+import { JobPlace, Prisma } from '@prisma/client';
+import { Transform } from 'class-transformer';
 
 export class JobEntity implements JobPlace {
   @ApiProperty({
@@ -51,7 +52,15 @@ export class JobEntity implements JobPlace {
   })
   workerId: string;
 
+  startTimeStr: string;
+  endTimeStr: string;
+
   constructor(partial: Partial<JobEntity>) {
     Object.assign(this, partial);
+    this.startTimeStr = partial.startDate.toISOString().slice(0, 10);
+    this.endTimeStr =
+      partial.endDate == null
+        ? 'now'
+        : partial.endDate.toISOString().slice(0, 10);
   }
 }

@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsBoolean, IsDate,
+  IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -35,18 +36,18 @@ export class CreateJobDto {
   @ApiProperty({
     description: 'The first working day on job',
     default: Date.now(),
-    example: Date.now(),
+    example: '2022-04-05',
   })
+  @IsDateString()
   @IsNotEmpty()
-  @IsDate()
   startDate: Date;
 
   @ApiPropertyOptional({
     description: 'The last working day on job',
-    example: Date.now(),
+    example: '2022-04-05',
   })
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endDate: Date;
 
   @ApiPropertyOptional({
