@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "JobPlace" ADD COLUMN     "endDate" DATE,
+ADD COLUMN     "startDate" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP;

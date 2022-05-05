@@ -5,8 +5,10 @@ import {
   Post,
   Body,
   Put,
-  Delete, ParseIntPipe,
+  Delete,
+  UseFilters, Res,
 } from '@nestjs/common';
+
 import {
   ApiParam,
   ApiOperation,
@@ -16,17 +18,39 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiCreatedResponse,
+  ApiConflictResponse, ApiExcludeEndpoint,
 } from '@nestjs/swagger';
+
 import { PostService } from './post.service';
 
 import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
 import { PostEntity } from './models/post.entity';
 
+import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+
 @ApiTags('posts')
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
+
+  @ApiOperation({ summary: 'Create post with given parameters' })
+  @ApiCreatedResponse({
+    type: PostEntity,
+    description: 'Post created',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiConflictResponse({
+    description: 'Some of given parameters should be unique but they are not',
+  })
+  @UseFilters(UniqueConstrainedViolationFilter)
+  @Post()
+  async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
+    return new PostEntity(await this.postService.createPost(data));
+  }
 
   @ApiOperation({ summary: 'Get post by id' })
   @ApiOkResponse({
@@ -45,8 +69,8 @@ export class PostController {
     example: 1,
   })
   @Get(':id')
-  async getPostById(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
-    return new PostEntity(await this.postService.findPost({ id: id }));
+  async getPostById(@Param('id') id: number): Promise<PostEntity> {
+    return new PostEntity(await this.postService.findPostById(id));
   }
 
   @ApiOperation({
@@ -62,24 +86,20 @@ export class PostController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Posts not found' })
-  @Get()
+  @Get('/published')
   async getPublishedPosts(): Promise<PostEntity[]> {
-    const posts = await this.postService.posts({ published: true });
+    const posts = await this.postService.getPublishedPosts();
     return posts.map((post) => new PostEntity(post));
   }
 
-  @ApiOperation({ summary: 'Create post with given parameters' })
-  @ApiCreatedResponse({
-    type: PostEntity,
-    description: 'Post created',
-  })
-  @ApiBadRequestResponse({
-    description: 'The request could not be understood due to malformed syntax.',
-  })
-  @ApiForbiddenResponse({ description: 'Access denied' })
-  @Post()
-  async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
-    return new PostEntity(await this.postService.createPost(data));
+  @ApiExcludeEndpoint()
+  @Get('/blog')
+  async getFeed(@Res() res) {
+    const posts = await this.postService.posts();
+    res.render('pages/blog', {
+      posts: posts.map((post) => new PostEntity(post)),
+      add_styles: '<link rel="stylesheet" href ="css/grid.css">',
+    });
   }
 
   @ApiOperation({
@@ -101,13 +121,11 @@ export class PostController {
     example: 1,
   })
   @Put(':id')
-  async editPost(
-    @Param('id', ParseIntPipe) id: number,
+  async editPostById(
+    @Param('id') id: number,
     @Body() data: UpdatePostDto,
   ): Promise<PostEntity> {
-    return new PostEntity(
-      await this.postService.updatePost({ id: id }, data),
-    );
+    return new PostEntity(await this.postService.updatePostById(id, data));
   }
 
   @ApiOperation({ summary: 'Delete post by id' })
@@ -127,9 +145,7 @@ export class PostController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
   @Delete(':id')
-  async deletePost(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
-    return new PostEntity(
-      await this.postService.deletePost({ id: id }),
-    );
+  async deletePostById(@Param('id') id: number): Promise<PostEntity> {
+    return new PostEntity(await this.postService.deletePostById(id));
   }
 }

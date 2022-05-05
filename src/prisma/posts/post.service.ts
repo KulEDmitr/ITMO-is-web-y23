@@ -8,12 +8,20 @@ import { UpdatePostDto } from './models/update-post.dto';
 export class PostService {
   constructor(private prisma: PrismaService) {}
 
+  async findPostById(id: number): Promise<Post | null> {
+    return this.findPost({ id: id });
+  }
+
   async findPost(
     postWhereUniqueInput: Prisma.PostWhereUniqueInput,
   ): Promise<Post | null> {
     return this.prisma.post.findUnique({
       where: postWhereUniqueInput,
     });
+  }
+
+  async getPublishedPosts(): Promise<Post[] | null> {
+    return this.posts({ published: true });
   }
 
   async posts(
@@ -43,6 +51,10 @@ export class PostService {
     });
   }
 
+  async updatePostById(id: number, data: UpdatePostDto): Promise<Post | null> {
+    return this.updatePost({ id: id }, data);
+  }
+
   async updatePost(
     where: Prisma.PostWhereUniqueInput,
     data: UpdatePostDto,
@@ -62,6 +74,10 @@ export class PostService {
         },
       },
     });
+  }
+
+  async deletePostById(id: number): Promise<Post | null> {
+    return this.deletePost({ id: id });
   }
 
   async deletePost(where: Prisma.PostWhereUniqueInput): Promise<Post> {
