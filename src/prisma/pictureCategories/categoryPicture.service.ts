@@ -11,10 +11,12 @@ export class CategoryPictureService {
 
   async getPicturesByCategory(
     categoryId: number,
-    ownerId: string,
+    ownerId?: string,
   ): Promise<Picture[] | null> {
-    await this.checkUser({ id: ownerId });
-    await this.checkCategory({ id: categoryId });
+    if (ownerId != undefined) {
+      await this.checkUser({ id: ownerId });
+    }
+    await this.checkCategory({ id: categoryId }, true);
 
     return await this.getPictures({
       categories: {
@@ -37,7 +39,7 @@ export class CategoryPictureService {
   async createCategoryPicture(
     data: CreateCategoryPictureDto,
   ): Promise<PictureCategory | null> {
-    await this.checkCategory({ name: data.name });
+    await this.checkCategory({ name: data.name }, false);
     const exist_pic = await this.checkPictures(data.pictures);
 
     return this.prisma.pictureCategory.create({
@@ -57,7 +59,9 @@ export class CategoryPictureService {
   async getPictures(
     pictureWhereInput: Prisma.PictureWhereInput,
   ): Promise<Picture[] | null> {
-    await this.checkUser({ id: pictureWhereInput.ownerId.toString() });
+    if (pictureWhereInput.ownerId != undefined) {
+      await this.checkUser({ id: pictureWhereInput.ownerId.toString() });
+    }
 
     return this.prisma.picture.findMany({
       where: pictureWhereInput,
@@ -68,12 +72,17 @@ export class CategoryPictureService {
     return this.prisma.pictureCategory.findMany();
   }
 
-  private async checkCategory(where: Prisma.PictureCategoryWhereUniqueInput) {
+  private async checkCategory(
+    where: Prisma.PictureCategoryWhereUniqueInput,
+    exist: boolean,
+  ) {
     const cat = await this.categoryPicture(where);
-    if (cat != null) {
-      throw new AlreadyExistException(
-        'Category with data: "' + where + '" already exist in system',
-      );
+
+    if (!exist && cat != null) {
+      throw new AlreadyExistException('Category with given data already exist');
+    }
+    if (exist && cat == null) {
+      throw new NotFoundException('Category with given data do not exist');
     }
   }
 
@@ -83,7 +92,7 @@ export class CategoryPictureService {
     });
     if (user == null) {
       throw new NotFoundException(
-        'User with data: "' + where + '" does not exist',
+        'User with given data does not exist',
       );
     }
   }

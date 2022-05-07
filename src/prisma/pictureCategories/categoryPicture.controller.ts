@@ -27,7 +27,6 @@ import { CreateCategoryPictureDto } from './models/create-categoryPicture.dto';
 import { CategoryPictureEntity } from './models/categoryPicture.entity';
 import { PictureEntity } from '../pictures/models/picture.entity';
 
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('pictureCategories')
@@ -49,7 +48,7 @@ export class CategoryPictureController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post()
   async createCategory(
     @Body() data: CreateCategoryPictureDto,
