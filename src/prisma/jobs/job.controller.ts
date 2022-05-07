@@ -28,8 +28,7 @@ import { JobService } from './job.service';
 import { CreateJobDto } from './models/create-job.dto';
 import { UpdateJobDto } from './models/update-job.dto';
 import { JobEntity } from './models/job.entity';
-
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('jobs')
 @Controller()
@@ -48,7 +47,7 @@ export class JobController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post('jobs')
   async createJobPlace(@Body() data: CreateJobDto): Promise<JobEntity> {
     return new JobEntity(await this.jobService.createJob(data));
@@ -57,7 +56,7 @@ export class JobController {
   @ApiOperation({ summary: 'Get job place by id' })
   @ApiOkResponse({
     type: JobEntity,
-    description: 'Post found',
+    description: 'Job place found',
   })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
@@ -87,14 +86,11 @@ export class JobController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiNotFoundResponse({ description: 'Posts not found' })
+  @ApiNotFoundResponse({ description: 'Job places not found' })
   @Get('jobs')
-  async getJobs(@Res() res) {
-    const posts = await this.jobService.jobs();
-    res.render('pages/jobs', {
-      jobPlace: posts.map((post) => new JobEntity(post)),
-      add_styles: '<link rel="stylesheet" href ="css/grid.css">',
-    });
+  async getJobs() {
+    const jobs = await this.jobService.jobs();
+    return jobs.map((job) => new JobEntity(job));
   }
 
   @ApiOperation({
@@ -109,13 +105,14 @@ export class JobController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiNotFoundResponse({ description: 'Job place not found' })
   @ApiParam({
     name: 'id',
     type: 'number',
     description: 'Id of job that need to be edited',
     example: 1,
   })
+  @UseFilters(RecordExistedFilter)
   @Put('jobs/:id')
   async editJobPlaceById(
     @Param('id') id: number,
@@ -139,7 +136,7 @@ export class JobController {
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiNotFoundResponse({ description: 'Job place not found' })
   @Delete('jobs/:id')
   async deleteJobPlaceById(@Param('id') id: number): Promise<JobEntity> {
     return new JobEntity(await this.jobService.deleteJobById(id));
@@ -148,9 +145,9 @@ export class JobController {
   @ApiExcludeEndpoint()
   @Get()
   async getNJobs(@Res() res) {
-    const posts = await this.jobService.getMainJobs(3);
+    const jobs = await this.jobService.getMainJobs(3);
     res.render('pages/index1', {
-      jobPlace: posts.map((post) => new JobEntity(post)),
+      jobPlace: jobs.map((job) => new JobEntity(job)),
     });
   }
 }
