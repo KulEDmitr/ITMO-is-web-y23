@@ -1,6 +1,8 @@
 -- CreateTable
 CREATE TABLE "JobPlace" (
     "id" SERIAL NOT NULL,
+    "startDate" TEXT NOT NULL,
+    "endDate" TEXT,
     "position" TEXT NOT NULL,
     "place" TEXT NOT NULL,
     "description" TEXT,

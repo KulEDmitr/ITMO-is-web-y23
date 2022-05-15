@@ -90,7 +90,7 @@ export class JobController {
   @Get('jobs')
   async getJobs() {
     const jobs = await this.jobService.jobs();
-    return jobs.map((job) => new JobEntity(job));
+    return { jobs: jobs.map((job) => new JobEntity(job)) };
   }
 
   @ApiOperation({
@@ -118,6 +118,8 @@ export class JobController {
     @Param('id') id: number,
     @Body() data: UpdateJobDto,
   ): Promise<JobEntity> {
+    console.log('lalala');
+    console.log(data);
     return new JobEntity(await this.jobService.updateJobById(id, data));
   }
 

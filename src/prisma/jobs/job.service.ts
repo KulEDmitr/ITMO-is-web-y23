@@ -78,12 +78,7 @@ export class JobService {
 
     return this.prisma.jobPlace.update({
       where,
-      data: {
-        position: data.position,
-        place: data.place,
-        description: data.description,
-        hidden: data.hidden,
-      },
+      data: { ...data },
     });
   }
 
@@ -102,9 +97,7 @@ export class JobService {
       where,
     });
     if (user == null) {
-      throw new NotFoundException(
-        'User with given data does not exist',
-      );
+      throw new NotFoundException('User with given data does not exist');
     }
   }
 

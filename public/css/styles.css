@@ -42,8 +42,9 @@ body {
     flex-direction: column;
 }
 
-body.additional__page {
-
+button {
+    outline: none;
+    border: none;
 }
 
 .content {

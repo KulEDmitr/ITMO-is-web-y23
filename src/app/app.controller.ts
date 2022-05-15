@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
+import { JobEntity } from '../prisma/jobs/models/job.entity';
 
 @ApiExcludeController()
 @Controller()
@@ -20,10 +21,44 @@ export class AppController {
     };
   }
 
-  @Get('blog')
-  @Render('pages/blog')
-  blog() {
-    return {};
+  // @Get('blog')
+  // @Render('pages/job_card')
+  // blog() {
+  //   return {
+  //     add_styles:
+  //       '<link rel="stylesheet" href ="css/form.css">' +
+  //       '<link rel="stylesheet" href ="css/job_card.css">',
+  //   };
+  // }
+
+  @Get('jobs/id/:id')
+  @Render('pages/edit_job_card')
+  job_card() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/job_card.css">',
+    };
+  }
+
+  @Get('jobs-list')
+  @Render('pages/jobs')
+  async getJobs() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="/css/grid.css">' +
+        '<link rel="stylesheet" href ="/css/job_card.css">',
+    };
+  }
+
+  @Get('create-job')
+  @Render('pages/create_job_card')
+  async createJob() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/job_card.css">',
+    };
   }
 
   @Get('different')
@@ -37,8 +72,8 @@ export class AppController {
   form() {
     return {
       add_styles:
-        '<link rel="stylesheet" href ="css/form.css">' +
-        '<link rel="stylesheet" href ="css/todoForm.css">',
+        '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/todoForm.css">',
     };
   }
 

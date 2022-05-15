@@ -71,15 +71,19 @@
       <div class="row jobs__row">
         {{#each jobPlace}}
           <div class="card job__card">
-            <a class="link nav__link" href="/jobs/{{id}}">
+            <a class="link get_job" href="/jobs/id/{{id}}">
               <div class="job__header">
                 <h3 class="job__position">{{position}}</h3>
               </div>
 
               <div class="job__place">{{place}}</div>
               <div class="job__time">
-                <span>{{startTimeStr}}</span> -
-                <span>{{endTimeStr}}</span>
+                <span>{{startDate}}</span> -
+                {{#if endDate}}
+                  <span>{{endDate}}</span>
+                {{else}}
+                  <span>now</span>
+                {{/if}}
               </div>
             </a>
           </div>
@@ -88,7 +92,7 @@
 
       <div class="jobs__footer">
         <a href="" class="link jobs__footer__link">Посмотреть резюме</a>
-        <a href="/jobs" class="link jobs__footer__link">Больше проектов</a>
+        <a href="/jobs-list" class="link jobs__footer__link">Больше проектов</a>
       </div>
     </div>
   </div>
