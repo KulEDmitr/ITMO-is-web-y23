@@ -132,7 +132,6 @@ export class JobController {
   @Get('jobs/page/with_query')
   async getPage(@Query('take') take?: number, @Query('skip') skip?: number) {
     const jobs = await this.jobService.jobs({ id: 'desc' }, skip, take);
-    console.log(jobs);
     return { jobs: jobs.map((job) => new JobEntity(job)) };
   }
 

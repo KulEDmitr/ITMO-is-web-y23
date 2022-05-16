@@ -55,7 +55,6 @@ const getData = (url, params) => {
       return data;
     })
     .then((data) => {
-      console.log(data);
       data.jobs.forEach((item) => {
         container.appendChild(createTemplate(item));
       });

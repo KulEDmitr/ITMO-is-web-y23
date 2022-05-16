@@ -26,19 +26,10 @@ export class AppController {
     return {
       add_styles:
         '<link rel="stylesheet" href ="css/blog.css">' +
+        '<link rel="stylesheet" href ="css/card.css">' +
         '<link rel="stylesheet" href ="/css/load_pagination.css">',
     };
   }
-
-  // @Get('blog')
-  // @Render('pages/blog')
-  // blog() {
-  //   return {
-  //     add_styles:
-  //       '<link rel="stylesheet" href ="css/form.css">' +
-  //       '<link rel="stylesheet" href ="css/job_card.css">',
-  //   };
-  // }
 
   @Get('jobs/id/:id')
   @Render('pages/edit_job_card')
@@ -46,6 +37,7 @@ export class AppController {
     return {
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/card.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">',
     };
   }
@@ -57,6 +49,7 @@ export class AppController {
       add_styles:
         '<link rel="stylesheet" href ="/css/grid.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">' +
+        '<link rel="stylesheet" href ="/css/card.css">' +
         '<link rel="stylesheet" href ="/css/load_pagination.css">',
     };
   }
@@ -67,7 +60,30 @@ export class AppController {
     return {
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/card.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">',
+    };
+  }
+
+  @Get('/create-draft')
+  @Render('pages/create_draft')
+  async createDraft() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/card.css">' +
+        '<link rel="stylesheet" href ="/css/blog.css">',
+    };
+  }
+
+  @Get('/posts/id/:id')
+  @Render('pages/edit_draft')
+  EditDraft() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="/css/form.css">' +
+        '<link rel="stylesheet" href ="/css/card.css">' +
+        '<link rel="stylesheet" href ="/css/blog.css">',
     };
   }
 

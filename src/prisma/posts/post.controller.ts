@@ -29,8 +29,6 @@ import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
 import { PostEntity } from './models/post.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
-import { Prisma } from '@prisma/client';
-
 @ApiTags('posts')
 @Controller('posts')
 export class PostController {
@@ -51,6 +49,7 @@ export class PostController {
   @UseFilters(RecordExistedFilter)
   @Post()
   async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
+    console.log(data);
     return new PostEntity(await this.postService.createPost(data));
   }
 
