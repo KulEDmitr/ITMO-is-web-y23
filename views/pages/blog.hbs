@@ -4,23 +4,32 @@
       <h2 class="section__title">Посты</h2>
     </div>
 
-    <div class="post__card">
-      <a class="link nav__link" href="/posts/1">
-        <div class="job__header">
-          <h3 class="job__position">lalala</h3>
+    <div id="posts__wrapper">
+      <template id="template__post">
+        <div class="card post__card">
+          <div class="post__title">
+            <h3 id="post__title">title</h3>
+          </div>
+
+          <div class="post__info">
+            <span>автор: <span id="author__login"></span></span>
+          </div>
+
+          <div class="centered">
+            <div class="delimiter"></div>
+          </div>
+
+          <p class="post__content" id="post__short_content">Lorem ipsum dolor sit amet</p>
+
+          <a class="link nav__link" id="post__link" href="">Read more</a>
         </div>
-      </a>
+      </template>
     </div>
 
-    {{#each posts}}
-      <div class="post__card">
-        <a class="link nav__link" href="/posts/{{id}}">
-          <div class="job__header">
-            <h3 class="job__position">{{title}}</h3>
-          </div>
-        </a>
-      </div>
-    {{/each}}
-
+    <div class="centered">
+      <button type="button" id="load_more" class="button__load_more">Смотреть Больше</button>
+    </div>
   </div>
 </section>
+
+<script src="/scripts/data_rendering/posts/posts_feed_render.js"></script>

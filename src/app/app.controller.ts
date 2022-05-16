@@ -1,6 +1,5 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { JobEntity } from '../prisma/jobs/models/job.entity';
 
 @ApiExcludeController()
 @Controller()
@@ -21,8 +20,18 @@ export class AppController {
     };
   }
 
+  @Get('blog')
+  @Render('pages/blog')
+  blog() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="css/blog.css">' +
+        '<link rel="stylesheet" href ="/css/load_pagination.css">',
+    };
+  }
+
   // @Get('blog')
-  // @Render('pages/job_card')
+  // @Render('pages/blog')
   // blog() {
   //   return {
   //     add_styles:
@@ -47,7 +56,8 @@ export class AppController {
     return {
       add_styles:
         '<link rel="stylesheet" href ="/css/grid.css">' +
-        '<link rel="stylesheet" href ="/css/job_card.css">',
+        '<link rel="stylesheet" href ="/css/job_card.css">' +
+        '<link rel="stylesheet" href ="/css/load_pagination.css">',
     };
   }
 

@@ -22,10 +22,28 @@ export class PostService {
   }
 
   async posts(
+    take?: number,
     where?: Prisma.PostWhereInput,
     orderBy?: Prisma.PostOrderByWithRelationInput,
   ): Promise<Post[] | null> {
-    return this.prisma.post.findMany({ where, orderBy });
+    return this.prisma.post.findMany({ take, where, orderBy });
+  }
+
+  async getPage(
+    take?: number,
+    skip?: number,
+    cursor?: Prisma.PostWhereUniqueInput,
+    where?: Prisma.PostWhereInput,
+  ): Promise<Post[] | null> {
+    return this.prisma.post.findMany({
+      take,
+      skip,
+      cursor: cursor,
+      where,
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   async createPost(data: CreatePostDto): Promise<Post | null> {

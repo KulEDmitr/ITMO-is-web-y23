@@ -29,6 +29,7 @@ import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
 import { PostEntity } from './models/post.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -91,10 +92,64 @@ export class PostController {
     description: 'published flag for posts that need to be found',
     example: true,
   })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    description: 'count of posts that need to be found',
+    example: 5,
+  })
   @Get()
-  async getFeed(@Query('published') published: boolean) {
-    const posts = await this.postService.posts({ published: published });
-    return posts.map((post) => new PostEntity(post));
+  async getFeed(
+    @Query('published') published: boolean,
+    @Query('take') take?: number,
+  ) {
+    const posts = await this.postService.posts(take, { published: published });
+    return { posts: posts.map((post) => new PostEntity(post)) };
+  }
+
+  @ApiOperation({ summary: 'Get some posts with published flag' })
+  @ApiOkResponse({
+    type: PostEntity,
+    isArray: true,
+    description: 'Post found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiQuery({
+    name: 'published',
+    type: 'boolean',
+    description: 'published flag for posts that need to be found',
+    example: true,
+  })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    description: 'count of posts that need to be found',
+    example: 5,
+  })
+  @ApiQuery({
+    name: 'cursor',
+    type: 'number',
+    description: 'id of the first post that need to be found',
+    example: 1,
+  })
+  @Get('page/with_query')
+  async getFeedPage(
+    @Query('published') published: boolean,
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+    @Query('cursor') cursor?: number,
+  ) {
+    const posts = await this.postService.getPage(
+      take,
+      skip,
+      { id: cursor },
+      { published: published },
+    );
+    return { posts: posts.map((post) => new PostEntity(post)) };
   }
 
   @ApiOperation({
