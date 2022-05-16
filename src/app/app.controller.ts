@@ -4,14 +4,18 @@ import { ApiExcludeController } from '@nestjs/swagger';
 @ApiExcludeController()
 @Controller()
 export class AppController {
-  // @Get()
-  // @Render('pages/index1')
-  // root() {
-  //   return {};
-  // }
-
   @Get('auth')
-  @Render('pages/loginForm')
+  @Render('pages/auth_form')
+  authForm() {
+    return {
+      add_styles:
+        '<link rel="stylesheet" href ="css/form.css">' +
+        '<link rel="stylesheet" href ="css/authForm.css">',
+    };
+  }
+
+  @Get('login')
+  @Render('pages/login_form')
   loginForm() {
     return {
       add_styles:

@@ -5,11 +5,21 @@
         <h2 class="section__title">Регистрация</h2>
       </div>
 
-      <form class="form">
+      <form class="form auth_form" id="auth_form">
         <div class="container">
+          <div class="form__group form__item">
+            <label for="name"><b>Имя</b></label>
+            <input class="item__text" id="name" type="text" placeholder="Введите аше имя">
+          </div>
+
           <div class="form__group form__item">
             <label for="email"><b>Почта</b></label>
             <input class="item__text" id="email" type="text" placeholder="Введите email" required="required">
+          </div>
+
+          <div class="form__group form__item">
+            <label for="login"><b>Логин</b></label>
+            <input class="item__text" id="login" type="text" placeholder="Введите login" required="required">
           </div>
 
           <div class="form__group form__item">
@@ -33,7 +43,7 @@
         </div>
       </form>
 
-      <span class="container form__line" id="login">Уже есть аккаунт? <a href="#">Войти</a></span>
+      <span class="container form__line" id="login">Уже есть аккаунт? <a href="/login">Войти</a></span>
 
     </div>
   </div>

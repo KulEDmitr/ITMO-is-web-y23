@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import * as hbs from 'hbs';
 import { TimerInterceptor } from './timer.interceptor';
-import { AuthInterceptor } from './auth.interceptor';
+import { AuthInterceptor } from './auth/auth.interceptor';
 import {
   SwaggerModule,
   DocumentBuilder,
@@ -14,7 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaClientExceptionFilter } from './prisma-client-exception.filter';
+import { PrismaClientExceptionFilter } from './filters/prisma-client-exception.filter';
 
 
 async function bootstrap() {

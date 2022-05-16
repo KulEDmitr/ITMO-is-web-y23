@@ -11,6 +11,10 @@
     margin-bottom: 20px;
 }
 
+.auth_form {
+    background: var(--light_background);
+}
+
 #add.user {
     height: 50px;
     text-transform: uppercase;
