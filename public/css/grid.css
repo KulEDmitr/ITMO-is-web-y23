@@ -1,0 +1,28 @@
+.gallery {
+    background-color: var(--dark_background);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 33%);
+    margin-bottom: 50px;
+}
+
+.grid > * {
+    box-shadow: 10px 5px 5px var(--shadow_gray);
+    border-radius: 5px;
+    margin: 2% 4% 2% 0;
+    padding: 5%;
+    height: 250px;
+}
+
+.post__card {
+    margin: 2%;
+    padding: 5%;
+    border-radius: 5px;
+    background-color: var(--light_background);
+}
+
+.post__card:hover {
+    background-color: var(--light_blue);
+}

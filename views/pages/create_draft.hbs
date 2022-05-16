@@ -1,0 +1,56 @@
+<section class="section">
+  <div class="container">
+    <div class="inner" id="container">
+      <div class="section__header">
+        <h2 class="section__title">Создание поста</h2>
+      </div>
+
+      <div id="create__element">
+        <div class="edit__element">
+          <a href="/blog">
+            <button type="button" class="card__button">Вернуться к ленте</button>
+          </a>
+        </div>
+
+        <div class="edit__element" id="create__form">
+          <form class="form element__card">
+            <div class="container">
+              <div class="form__group form__item">
+                <label class="form__label" for="title"><b>Заголовок</b></label>
+                <input class="item__text" id="title" type="text" placeholder="title">
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="content"><b>Контент</b></label>
+                <textarea class="item__text" id="content" placeholder="content"></textarea>
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="published_flag"><b>Опубликовать</b></label>
+                <div id="published_flag">
+                  <div>
+                    <input type="radio" id="draft" name="drone" value="draft" checked>
+                    <label for="draft">Не публиковать (создается шаблон)</label>
+                  </div>
+
+                  <div>
+                    <input type="radio" id="publish" name="drone" value="publish">
+                    <label for="publish">Опубликовать пост</label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button type="submit" class="card__button" id="add">Сохранить изменения</button>
+                <button type="button" class="card__button" id="reset">Отчистить форму</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/scripts/data_rendering/posts/create_draft_render.js"></script>

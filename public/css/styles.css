@@ -42,12 +42,13 @@ body {
     flex-direction: column;
 }
 
-body.additional__page {
-
+button {
+    outline: none;
+    border: none;
 }
 
 .content {
-    padding-top: 70px;
+    padding-top: 50px;
     flex-grow: 1;
 }
 
@@ -99,6 +100,18 @@ body.additional__page {
 .nav__link {
     margin-right: 50px;
     color: #fff;
+}
+
+.login__button {
+    outline: none; /* Для синий ободки */
+    border: 0;
+    background: transparent;
+    color: #fff;
+}
+
+.login__info {
+    color: var(--light_yellow);
+    opacity: .7;
 }
 
 .active {

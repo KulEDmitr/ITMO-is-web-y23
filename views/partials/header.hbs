@@ -2,18 +2,19 @@
   <div class="container">
     <div class="header__menu">
       <div class="header__logo">
-        <img src="/images/header-logo.jpg" alt="">
+        <a class="link nav__link" href="/"><img src="/images/header-logo.png" width="30px" alt=""></a>
       </div>
 
       <nav class="nav">
-        <a class="link nav__link" href="/">Главная</a>
         <a class="link nav__link" href="/different">Разное</a>
         <a class="link nav__link" href="/physics">Физика</a>
         <a class="link nav__link" href="/gallery">Галерея</a>
         <a class="link nav__link" href="/operation">Операция Ы</a>
         <a class="link nav__link" href="/form">Форма</a>
         <a class="link nav__link" href="/loaded_pictures">Запрос</a>
+        <a class="link nav__link" href="/blog">Блог</a>
       </nav>
+
 
       {{#if is_auth}}
         {{> logout }}

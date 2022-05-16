@@ -12,41 +12,76 @@ datasource db {
 }
 
 model User {
-  id         Int     @default(autoincrement()) @id
-  email      String  @unique
-  name       String?
-  posts      Post[]
-  pictures   Picture[]
+  id       String     @id @default(uuid()) @db.Uuid
+  login    String     @unique
+  password String
+  email    String     @unique
+  name     String?
+  posts    Post[]
+  pictures Picture[]
+  jobs     JobPlace[]
+}
+
+model JobPlace {
+  id          Int      @id @default(autoincrement())
+  startDate   String
+  endDate     String?
+  position    String
+  place       String
+  description String?
+  hidden      Boolean? @default(false) @db.Boolean
+  worker      User     @relation(fields: [workerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  workerId    String   @db.Uuid
 }
 
 model Post {
-  id         Int      @default(autoincrement()) @id
+  id         Int               @id @default(autoincrement())
   title      String
   content    String?
-  published  Boolean? @default(false)
-  author     User?    @relation(fields: [authorId], references: [id])
-  authorId   Int?
-  categories CategoryPost[]
+  published  Boolean?          @default(false) @db.Boolean
+  author     User              @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId   String            @db.Uuid
+  categories CategoryOnPosts[]
 }
 
-model CategoryPost {
-  id    Int      @default(autoincrement()) @id
-  name  String
-  posts Post[]
+model CategoryOnPosts {
+  id       Int          @default(autoincrement())
+  post     Post         @relation(fields: [postId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  category PostCategory @relation(fields: [catId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  postId   Int
+  catId    Int
+
+  @@id([postId, catId])
+}
+
+model PostCategory {
+  id    Int               @id @default(autoincrement())
+  name  String            @unique
+  posts CategoryOnPosts[]
 }
 
 model Picture {
-  id          Int      @default(autoincrement()) @id
+  id          Int                  @id @default(autoincrement())
   title       String
   image       String
   description String?
-  owner       User?    @relation(fields: [ownerId], references: [id])
-  ownerId     Int?
-  categories  CategoryPicture[]
+  owner       User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ownerId     String               @db.Uuid
+  categories  CategoryOnPictures[]
 }
 
-model CategoryPicture {
-  id       Int      @default(autoincrement()) @id
-  name     String
-  pictures Picture[]
+model CategoryOnPictures {
+  id       Int             @default(autoincrement())
+  picture  Picture         @relation(fields: [picId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  category PictureCategory @relation(fields: [catId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  picId    Int
+  catId    Int
+
+  @@id([picId, catId])
+}
+
+model PictureCategory {
+  id       Int                  @id @default(autoincrement())
+  name     String               @unique
+  pictures CategoryOnPictures[]
 }

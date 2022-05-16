@@ -1,0 +1,15 @@
+.job__description {
+    width: 80%;
+    font-size: 16px;
+    color: var(--dark_text);
+    /*opacity: .7;*/
+    text-align: left;
+    margin-top: 20px;
+}
+
+#job__create_item {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+}

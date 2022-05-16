@@ -69,40 +69,30 @@
       </div>
 
       <div class="row jobs__row">
-        <div class="card job__card">
-          <div class="job__header">
-            <h3 class="job__position">Dream position</h3>
-            <img class="job__header__item" src="/images/jobs/closed.png" alt="">
+        {{#each jobPlace}}
+          <div class="card job__card">
+            <a class="link get_job" href="/jobs/id/{{id}}">
+              <div class="job__header">
+                <h3 class="job__position">{{position}}</h3>
+              </div>
+
+              <div class="job__place">{{place}}</div>
+              <div class="job__time">
+                <span>{{startDate}}</span> -
+                {{#if endDate}}
+                  <span>{{endDate}}</span>
+                {{else}}
+                  <span>now</span>
+                {{/if}}
+              </div>
+            </a>
           </div>
-
-          <div class="job__place">Dream place</div>
-          <div class="job__time">future - future</div>
-        </div>
-
-        <div class="card job__card">
-          <div class="job__header">
-            <h3 class="job__position">Служба технической поддержки</h3>
-            <img class="job__header__item" src="/images/jobs/closed.png" alt="">
-          </div>
-
-          <div class="job__place">Тот, чье имя нельзя называть</div>
-          <div class="job__time">сентябрь 2021 - декабрь 2021</div>
-        </div>
-
-        <div class="card job__card">
-          <div class="job__header">
-            <h3 class="job__position">Наставник по математике</h3>
-            <img class="job__header__item" src="/images/jobs/closed.png" alt="">
-          </div>
-
-          <div class="job__place">Онлайн школа для подготовки к ЕГЭ Техноскул</div>
-          <div class="job__time">сентябрь 2020 – июнь 2021</div>
-        </div>
+        {{/each}}
       </div>
 
       <div class="jobs__footer">
         <a href="" class="link jobs__footer__link">Посмотреть резюме</a>
-        <a href="" class="link jobs__footer__link">Больше проектов</a>
+        <a href="/jobs-list" class="link jobs__footer__link">Больше проектов</a>
       </div>
     </div>
   </div>

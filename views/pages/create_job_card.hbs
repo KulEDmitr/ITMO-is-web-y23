@@ -1,0 +1,56 @@
+<section class="section">
+  <div class="container">
+    <div class="inner" id="container">
+      <div class="section__header">
+        <h2 class="section__title">Создание места работы</h2>
+      </div>
+
+      <div id="create__element">
+        <div class="edit__element">
+          <a href="/jobs-list">
+            <button type="button" class="card__button">Вернуться к списку</button>
+          </a>
+        </div>
+
+        <div class="edit__element" id="create__form">
+          <form class="form element__card">
+            <div class="container">
+              <div class="form__group form__item">
+                <label class="form__label" for="position"><b>Должность</b></label>
+                <input class="item__text" id="position" type="text" placeholder="position" required="required">
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="place"><b>Место работы</b></label>
+                <input class="item__text" id="place" type="text" placeholder="place" required="required">
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="startTime"><b>Дата начала</b></label>
+                <input class="item__text" id="startTime" type="date" required="required">
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="endTime"><b>Дата завершения</b></label>
+                <input class="item__text" id="endTime" type="date">
+              </div>
+
+              <div class="form__group form__item">
+                <label class="form__label" for="description"><b>Описание</b></label>
+                <textarea class="item__text" id="description" placeholder="description"></textarea>
+              </div>
+
+              <div>
+                <button type="submit" class="card__button" id="add">Сохранить данные</button>
+                <button type="button" class="card__button" id="reset">Стереть данные</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/scripts/data_rendering/jobs/create_card_render.js"></script>
