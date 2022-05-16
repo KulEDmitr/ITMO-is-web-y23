@@ -29,7 +29,6 @@ document.getElementById('down__button').onclick = () => {
   document.body.classList.add('loading');
 
   let album = Math.floor(Math.random() * 100) + 1;
-  console.log(album);
 
   let url = baseUrl + '?albumId=' + album;
 
@@ -42,6 +41,7 @@ document.getElementById('down__button').onclick = () => {
       }
     })
     .then((json) => {
+      document.getElementById('server__time').textContent = json.server_time;
       json.forEach((item) => {
         container.appendChild(createTemplate(item));
       });
