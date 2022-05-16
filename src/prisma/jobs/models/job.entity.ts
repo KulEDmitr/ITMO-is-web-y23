@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { JobPlace, Prisma } from '@prisma/client';
-import { Transform } from 'class-transformer';
+import { JobPlace } from '@prisma/client';
 
 export class JobEntity implements JobPlace {
   @ApiProperty({
@@ -31,13 +30,13 @@ export class JobEntity implements JobPlace {
     description: 'The first working day on job',
     example: '',
   })
-  startDate: Date;
+  startDate: string;
 
   @ApiPropertyOptional({
     description: 'The last working day on job',
     example: '',
   })
-  endDate: Date;
+  endDate: string;
 
   @ApiPropertyOptional({
     description:
@@ -52,15 +51,7 @@ export class JobEntity implements JobPlace {
   })
   workerId: string;
 
-  startTimeStr: string;
-  endTimeStr: string;
-
   constructor(partial: Partial<JobEntity>) {
     Object.assign(this, partial);
-    this.startTimeStr = partial.startDate.toISOString().slice(0, 10);
-    this.endTimeStr =
-      partial.endDate == null
-        ? 'now'
-        : partial.endDate.toISOString().slice(0, 10);
   }
 }

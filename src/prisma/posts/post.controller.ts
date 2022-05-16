@@ -6,7 +6,8 @@ import {
   Body,
   Put,
   Delete,
-  UseFilters, Res,
+  UseFilters,
+  Query,
 } from '@nestjs/common';
 
 import {
@@ -18,7 +19,8 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiCreatedResponse,
-  ApiConflictResponse, ApiExcludeEndpoint,
+  ApiConflictResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import { PostService } from './post.service';
@@ -26,9 +28,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
 import { PostEntity } from './models/post.entity';
-
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
-
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 @ApiTags('posts')
 @Controller('posts')
 export class PostController {
@@ -46,9 +46,10 @@ export class PostController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post()
   async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
+    console.log(data);
     return new PostEntity(await this.postService.createPost(data));
   }
 
@@ -73,33 +74,81 @@ export class PostController {
     return new PostEntity(await this.postService.findPostById(id));
   }
 
-  @ApiOperation({
-    summary: 'Get all published posts in system',
-  })
+  @ApiOperation({ summary: 'Get all posts with published flag' })
   @ApiOkResponse({
     type: PostEntity,
     isArray: true,
-    description: 'Posts found',
+    description: 'Post found',
   })
   @ApiBadRequestResponse({
     description: 'The request could not be understood due to malformed syntax.',
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
-  @ApiNotFoundResponse({ description: 'Posts not found' })
-  @Get('/published')
-  async getPublishedPosts(): Promise<PostEntity[]> {
-    const posts = await this.postService.getPublishedPosts();
-    return posts.map((post) => new PostEntity(post));
+  @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiQuery({
+    name: 'published',
+    type: 'boolean',
+    description: 'published flag for posts that need to be found',
+    example: true,
+  })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    description: 'count of posts that need to be found',
+    example: 5,
+  })
+  @Get()
+  async getFeed(
+    @Query('published') published: boolean,
+    @Query('take') take?: number,
+  ) {
+    const posts = await this.postService.posts(take, { published: published });
+    return { posts: posts.map((post) => new PostEntity(post)) };
   }
 
-  @ApiExcludeEndpoint()
-  @Get('/blog')
-  async getFeed(@Res() res) {
-    const posts = await this.postService.posts();
-    res.render('pages/blog', {
-      posts: posts.map((post) => new PostEntity(post)),
-      add_styles: '<link rel="stylesheet" href ="css/grid.css">',
-    });
+  @ApiOperation({ summary: 'Get some posts with published flag' })
+  @ApiOkResponse({
+    type: PostEntity,
+    isArray: true,
+    description: 'Post found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiQuery({
+    name: 'published',
+    type: 'boolean',
+    description: 'published flag for posts that need to be found',
+    example: true,
+  })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    description: 'count of posts that need to be found',
+    example: 5,
+  })
+  @ApiQuery({
+    name: 'cursor',
+    type: 'number',
+    description: 'id of the first post that need to be found',
+    example: 1,
+  })
+  @Get('page/with_query')
+  async getFeedPage(
+    @Query('published') published: boolean,
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+    @Query('cursor') cursor?: number,
+  ) {
+    const posts = await this.postService.getPage(
+      take,
+      skip,
+      { id: cursor },
+      { published: published },
+    );
+    return { posts: posts.map((post) => new PostEntity(post)) };
   }
 
   @ApiOperation({
@@ -120,6 +169,7 @@ export class PostController {
     description: 'Id of post that need to be edited',
     example: 1,
   })
+  @UseFilters(RecordExistedFilter)
   @Put(':id')
   async editPostById(
     @Param('id') id: number,

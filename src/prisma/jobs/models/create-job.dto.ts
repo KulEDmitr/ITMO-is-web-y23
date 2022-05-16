@@ -40,7 +40,7 @@ export class CreateJobDto {
   })
   @IsDateString()
   @IsNotEmpty()
-  startDate: Date;
+  startDate: string;
 
   @ApiPropertyOptional({
     description: 'The last working day on job',
@@ -48,7 +48,7 @@ export class CreateJobDto {
   })
   @IsOptional()
   @IsDateString()
-  endDate: Date;
+  endDate: string;
 
   @ApiPropertyOptional({
     description:

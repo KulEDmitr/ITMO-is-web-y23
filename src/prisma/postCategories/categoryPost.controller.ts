@@ -26,8 +26,7 @@ import { CategoryPostService } from './categoryPost.service';
 import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
 import { CategoryPostEntity } from './models/categoryPost.entity';
 import { PostEntity } from '../posts/models/post.entity';
-
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('postCategories')
 @Controller('post-categories')
@@ -46,7 +45,7 @@ export class CategoryPostController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post()
   async createCategory(
     @Body() data: CreateCategoryPostDto,
@@ -106,6 +105,7 @@ export class CategoryPostController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
+  @UseFilters(RecordExistedFilter)
   @Get(':categoryId/posts')
   async getPostsByCategoryId(
     @Param('categoryId') categoryId: number,

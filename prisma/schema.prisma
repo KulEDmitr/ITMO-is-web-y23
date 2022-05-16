@@ -23,15 +23,15 @@ model User {
 }
 
 model JobPlace {
-  id          Int       @id @default(autoincrement())
-  startDate   DateTime  @default(now()) @db.Date
-  endDate     DateTime? @db.Date
+  id          Int      @id @default(autoincrement())
+  startDate   String
+  endDate     String?
   position    String
   place       String
   description String?
-  hidden      Boolean?  @default(false) @db.Boolean
-  worker      User      @relation(fields: [workerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  workerId    String    @db.Uuid
+  hidden      Boolean? @default(false) @db.Boolean
+  worker      User     @relation(fields: [workerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  workerId    String   @db.Uuid
 }
 
 model Post {

@@ -4,22 +4,34 @@
       <h2 class="section__title">Должности</h2>
     </div>
 
-    <div class="grid">
-      {{#each jobPlace}}
-        <div class="card job__card">
-          <a class="link nav__link" href="/jobs/{{id}}">
-            <div class="job__header">
-              <h3 class="job__position">{{position}}</h3>
-            </div>
+    <a href="/create-job">
+      <button type="button" class="card__button">Добавить место работы</button>
+    </a>
 
-            <div class="job__place">{{place}}</div>
-            <div class="job__time">
-              <span>{{startTimeStr}}</span> -
-              <span>{{endTimeStr}}</span>
-            </div>
-          </a>
-        </div>
-      {{/each}}
+    <div class="grid" id="loaded__jobs__wrapper">
+
+        <template id="template__loaded__job">
+          <div class="card job__card">
+            <a class="link get_job" id="job__href" href="">
+              <div class="job__header">
+                <h3 class="job__position" id="job__position"></h3>
+              </div>
+
+              <div class="job__place" id="job__place"></div>
+              <div class="job__time">
+                <span id="job__start_time"></span> -
+                <span id="job__end_time"></span>
+              </div>
+            </a>
+          </div>
+        </template>
+
+    </div>
+
+    <div class="centered">
+      <button type="button" id="load_more" class="button__load_more">Смотреть Больше</button>
     </div>
   </div>
 </section>
+
+<script src="/scripts/data_rendering/jobs/jobs_list_render.js"></script>

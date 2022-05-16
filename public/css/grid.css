@@ -11,7 +11,7 @@
 .grid > * {
     box-shadow: 10px 5px 5px var(--shadow_gray);
     border-radius: 5px;
-    margin: 2%;
+    margin: 2% 4% 2% 0;
     padding: 5%;
     height: 250px;
 }

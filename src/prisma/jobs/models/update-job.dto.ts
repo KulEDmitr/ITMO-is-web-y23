@@ -1,10 +1,6 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-  PartialType,
-} from '@nestjs/swagger';
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { CreateJobDto } from './create-job.dto';
-import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class UpdateJobDto extends PartialType(CreateJobDto) {
   @ApiPropertyOptional({
@@ -33,11 +29,11 @@ export class UpdateJobDto extends PartialType(CreateJobDto) {
 
   @ApiPropertyOptional({
     description: 'The last working day on job',
-    example: Date.now(),
+    example: Date.now().toString(),
   })
   @IsOptional()
-  @IsDate()
-  endDate: Date;
+  @IsDateString()
+  endDate: string;
 
   @ApiPropertyOptional({
     description:

@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma.service';
 import { User, Prisma, Post, Picture, JobPlace } from '@prisma/client';
 import { CreateUserDto } from './models/create-user.dto';
 import { UpdateUserDto } from './models/update-user.dto';
+import { AlreadyExistException } from '../../exceptions/already-exist.exception';
+import { NotFoundException } from '../../exceptions/not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -25,6 +27,8 @@ export class UserService {
   }
 
   async createUser(data: CreateUserDto): Promise<User | null> {
+    await this.checkUser({ email: data.email }, false);
+
     return this.prisma.user.create({
       data: {
         login: data.login,
@@ -43,6 +47,15 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     data: UpdateUserDto,
   ): Promise<User | null> {
+    await this.checkUser(userWhereUniqueInput, true);
+    const curUser = await this.user(userWhereUniqueInput);
+    if (curUser.email == data.email) {
+      data.email = undefined;
+    }
+    if (curUser.name == data.name) {
+      data.name = undefined;
+    }
+
     return this.prisma.user.update({
       where: userWhereUniqueInput,
       data: {
@@ -64,6 +77,8 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     postWhereInput: Prisma.PostWhereInput,
   ): Promise<Post[] | null> {
+    await this.checkUser(userWhereUniqueInput, true);
+
     return this.prisma.user
       .findUnique({
         where: userWhereUniqueInput,
@@ -81,6 +96,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     pictureWhereInput?: Prisma.PictureWhereInput,
   ): Promise<Picture[] | null> {
+    await this.checkUser(userWhereUniqueInput, true);
     return this.prisma.user
       .findUnique({
         where: userWhereUniqueInput,
@@ -98,6 +114,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     jobWhereInput?: Prisma.JobPlaceWhereInput,
   ): Promise<JobPlace[] | null> {
+    await this.checkUser(userWhereUniqueInput, true);
     return this.prisma.user
       .findUnique({
         where: userWhereUniqueInput,
@@ -113,5 +130,17 @@ export class UserService {
 
   async delete(where: Prisma.UserWhereUniqueInput): Promise<User | null> {
     return this.prisma.user.delete({ where });
+  }
+
+  private async checkUser(where: Prisma.UserWhereUniqueInput, exist: boolean) {
+    const user: User | null = await this.prisma.user.findUnique({
+      where,
+    });
+    if (!exist && user != null) {
+      throw new AlreadyExistException('User with given data already exist');
+    }
+    if (exist && user == null) {
+      throw new NotFoundException('User with given data do not exist');
+    }
   }
 }

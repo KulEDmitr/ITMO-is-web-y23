@@ -26,8 +26,7 @@ import { PictureService } from './picture.service';
 import { CreatePictureDto } from './models/create-picture.dto';
 import { PictureEntity } from './models/picture.entity';
 import { UpdatePictureDto } from './models/update-picture.dto';
-
-import { UniqueConstrainedViolationFilter } from '../../filters/unique-constrained-violation.filter';
+import { RecordExistedFilter } from '../../filters/record-existed.filter';
 
 @ApiTags('pictures')
 @Controller('pictures')
@@ -46,7 +45,7 @@ export class PictureController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
-  @UseFilters(UniqueConstrainedViolationFilter)
+  @UseFilters(RecordExistedFilter)
   @Post()
   async createPicture(@Body() data: CreatePictureDto): Promise<PictureEntity> {
     return new PictureEntity(await this.pictureService.createPicture(data));
@@ -109,6 +108,7 @@ export class PictureController {
     description: 'Id of picture that need to be found',
     example: 1,
   })
+  @UseFilters(RecordExistedFilter)
   @Put(':id')
   async editPictureById(
     @Param('id') id: number,

@@ -7,6 +7,15 @@
   </div>
 
   <div class="footer__time">
-    <span>Total load time: <span id="load__time"></span>ms (client) + {{server_time}}ms (server)</span>
+    <span>Total load time:
+      <span id="load__time"></span>ms (client) +
+      <span id="server__time">
+        {{#if server_time}}
+          {{server_time}}
+        {{else}}
+          0
+        {{/if}}
+      </span>ms (server)
+    </span>
   </div>
 </footer>
