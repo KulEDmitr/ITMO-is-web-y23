@@ -7,6 +7,10 @@ function error() {
   };
 }
 
+const setServerTime = (data) => {
+  document.getElementById('server__time').textContent = data.server_time;
+};
+
 const createTemplate = (data) => {
   setCard(data);
   setForm(data);
@@ -70,6 +74,7 @@ fetch(url, { method: 'GET' })
     }
   })
   .then((data) => {
+    setServerTime(data);
     createTemplate(data);
   })
   .catch((data) => {
@@ -103,6 +108,7 @@ editJobForm.addEventListener('submit', (event) => {
       }
     })
     .then((data) => {
+      setServerTime(data);
       setCard(data);
     })
     .catch((data) => {
@@ -123,7 +129,8 @@ document.getElementById('delete').onclick = () => {
         return error();
       }
     })
-    .then(() => {
+    .then((data) => {
+      setServerTime(data);
       cleanPage();
       alert('data successfully deleted');
     })

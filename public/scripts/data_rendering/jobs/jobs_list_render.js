@@ -1,7 +1,10 @@
 let container = document.getElementById('loaded__jobs__wrapper');
 
+const setServerTime = (data) => {
+  document.getElementById('server__time').textContent = data.server_time;
+};
+
 const createTemplate = (data) => {
-  console.log(data);
   let template = document
     .getElementById('template__loaded__job')
     .content.cloneNode(true);
@@ -24,19 +27,57 @@ function error() {
   };
 }
 
-fetch('/jobs')
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      return error();
-    }
-  })
-  .then((data) => {
-    data.jobs.forEach((item) => {
-      container.appendChild(createTemplate(item));
+let lastJob = 0;
+const checkData = (data) => {
+  lastJob += data.jobs.length;
+  if (data.jobs.length === 0) {
+    document.getElementById('load_more').remove();
+    alert('Загружены все имеющиеся карточки');
+  }
+};
+
+const getUrl = (url, params) => {
+  let queryParams = new URLSearchParams(Object.entries(params));
+  return url + '?' + queryParams;
+};
+
+const getData = (url, params) => {
+  fetch(getUrl(url, params))
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return error();
+      }
+    })
+    .then((data) => {
+      setServerTime(data);
+      return data;
+    })
+    .then((data) => {
+      console.log(data);
+      data.jobs.forEach((item) => {
+        container.appendChild(createTemplate(item));
+      });
+      return data;
+    })
+    .then((data) => {
+      checkData(data, params);
+    })
+    .catch(() => {
+      alert(error());
     });
-  })
-  .catch(() => {
-    container.appendChild(createTemplate(error()));
-  });
+};
+
+getData('/jobs', { take: 3 });
+
+const getParams = () => {
+  return {
+    take: 3,
+    skip: lastJob,
+  };
+};
+
+document.getElementById('load_more').onclick = () => {
+  getData('/jobs/page/with_query', getParams());
+};

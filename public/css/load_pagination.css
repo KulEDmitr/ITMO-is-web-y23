@@ -1,0 +1,23 @@
+.centered {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.button__load_more {
+    height: 50px;
+    text-transform: uppercase;
+    max-width: 100px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+}
+
+.button__load_more:hover {
+    background-color: var(--light_yellow);
+    cursor: pointer;
+}
+
+.button__load_more:active {
+    top: 3px;
+    box-shadow: 0 2px 0 var(--black);
+}

@@ -21,24 +21,19 @@ export class JobService {
     });
   }
 
-  async getMainJobs(
-    take?: number,
-    where?: Prisma.JobPlaceWhereInput,
-  ): Promise<JobPlace[] | null> {
-    return this.jobs(0, take, where, { startDate: 'desc' });
+  async getMainJobs(take?: number): Promise<JobPlace[] | null> {
+    return this.jobs({ startDate: 'desc' }, 0, take);
   }
 
   async jobs(
+    orderBy?: Prisma.JobPlaceOrderByWithRelationInput,
     skip?: number,
     take?: number,
     where?: Prisma.JobPlaceWhereInput,
-    orderBy?: Prisma.JobPlaceOrderByWithRelationInput,
-    cursor?: Prisma.JobPlaceWhereUniqueInput,
   ): Promise<JobPlace[] | null> {
     return this.prisma.jobPlace.findMany({
       skip,
       take,
-      cursor,
       where,
       orderBy,
     });

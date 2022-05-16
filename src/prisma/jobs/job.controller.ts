@@ -8,6 +8,7 @@ import {
   Delete,
   UseFilters,
   Res,
+  Query,
 } from '@nestjs/common';
 
 import {
@@ -21,6 +22,7 @@ import {
   ApiCreatedResponse,
   ApiConflictResponse,
   ApiExcludeEndpoint,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import { JobService } from './job.service';
@@ -29,6 +31,7 @@ import { CreateJobDto } from './models/create-job.dto';
 import { UpdateJobDto } from './models/update-job.dto';
 import { JobEntity } from './models/job.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { PostEntity } from '../posts/models/post.entity';
 
 @ApiTags('jobs')
 @Controller()
@@ -87,9 +90,49 @@ export class JobController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Job places not found' })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    description: 'count of job cards that need to be found',
+    example: 5,
+  })
   @Get('jobs')
-  async getJobs() {
-    const jobs = await this.jobService.jobs();
+  async getJobs(@Query('take') take?: number) {
+    const jobs = await this.jobService.jobs({ startDate: 'desc' }, 0, take);
+    return { jobs: jobs.map((job) => new JobEntity(job)) };
+  }
+
+  @ApiOperation({
+    summary: 'Get all jobs in system',
+  })
+  @ApiOkResponse({
+    type: JobEntity,
+    isArray: true,
+    description: 'Jobs found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'Job places not found' })
+  @ApiQuery({
+    name: 'take',
+    type: 'number',
+    required: false,
+    description: 'count of cards that need to be found',
+    example: 3,
+  })
+  @ApiQuery({
+    name: 'skip',
+    type: 'number',
+    required: false,
+    description: 'count of cards that need to be skipped',
+    example: 1,
+  })
+  @Get('jobs/page/with_query')
+  async getPage(@Query('take') take?: number, @Query('skip') skip?: number) {
+    const jobs = await this.jobService.jobs({ id: 'desc' }, skip, take);
+    console.log(jobs);
     return { jobs: jobs.map((job) => new JobEntity(job)) };
   }
 
@@ -118,8 +161,6 @@ export class JobController {
     @Param('id') id: number,
     @Body() data: UpdateJobDto,
   ): Promise<JobEntity> {
-    console.log('lalala');
-    console.log(data);
     return new JobEntity(await this.jobService.updateJobById(id, data));
   }
 
@@ -147,7 +188,7 @@ export class JobController {
   @ApiExcludeEndpoint()
   @Get()
   async getNJobs(@Res() res) {
-    const jobs = await this.jobService.getMainJobs(3);
+    const jobs = await this.jobService.jobs({ startDate: 'desc' }, 0, 3);
     res.render('pages/index1', {
       jobPlace: jobs.map((job) => new JobEntity(job)),
     });

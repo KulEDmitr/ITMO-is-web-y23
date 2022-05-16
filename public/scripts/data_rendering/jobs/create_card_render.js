@@ -4,6 +4,10 @@ function error() {
   };
 }
 
+const setServerTime = (data) => {
+  document.getElementById('server__time').textContent = data.server_time;
+};
+
 const cleanForm = () => {
   document.getElementById('position').value = '';
   document.getElementById('place').value = '';
@@ -41,6 +45,7 @@ createJobForm.addEventListener('submit', (event) => {
       }
     })
     .then((data) => {
+      setServerTime(data);
       alert('job place successfully added');
       window.location = 'jobs/id/' + data.id;
     })
