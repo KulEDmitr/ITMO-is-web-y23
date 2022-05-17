@@ -1,5 +1,4 @@
 import {
-  ApiHideProperty,
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
@@ -33,7 +32,4 @@ export class UserEntity implements User {
     example: 'JaneDoe',
   })
   login: string;
-
-  @ApiHideProperty()
-  password: string;
 }
