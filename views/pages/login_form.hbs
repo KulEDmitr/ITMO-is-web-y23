@@ -5,16 +5,16 @@
         <h2 class="section__title">Вход</h2>
       </div>
 
-      <form class="form auth_form">
+      <form class="form auth_form" id="signin_form">
         <div class="container">
           <div class="form__group form__item">
             <label for="email"><b>Почта</b></label>
-            <input class="item__text" id="email" type="text" placeholder="Введите email" required="required">
+            <input class="item__text" id="email" type="text" placeholder="Введите email" required="required" autocomplete="email">
           </div>
 
           <div class="form__group form__item">
             <label for="psw"><b>Пароль</b></label>
-            <input class="item__text" id="password" type="password" placeholder="Введите пароль" required="required">
+            <input class="item__text" id="password" type="password" placeholder="Введите пароль" required="required" autocomplete="current-password">
           </div>
 
           <div class="form__group form__item">
@@ -25,3 +25,5 @@
     </div>
   </div>
 </section>
+
+<script src="/scripts/auth/signin.js"></script>

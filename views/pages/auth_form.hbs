@@ -9,27 +9,27 @@
         <div class="container">
           <div class="form__group form__item">
             <label for="name"><b>Имя</b></label>
-            <input class="item__text" id="name" type="text" placeholder="Введите аше имя">
+            <input class="item__text" id="name" type="text" placeholder="Введите аше имя" autocomplete="name">
           </div>
 
           <div class="form__group form__item">
             <label for="email"><b>Почта</b></label>
-            <input class="item__text" id="email" type="text" placeholder="Введите email" required="required">
+            <input class="item__text" id="email" type="text" placeholder="Введите email" required="required" autocomplete="email">
           </div>
 
           <div class="form__group form__item">
             <label for="login"><b>Логин</b></label>
-            <input class="item__text" id="login" type="text" placeholder="Введите login" required="required">
+            <input class="item__text" id="login" type="text" placeholder="Введите login" required="required" autocomplete="username">
           </div>
 
           <div class="form__group form__item">
             <label for="psw"><b>Пароль</b></label>
-            <input class="item__text" id="password" type="password" placeholder="Введите пароль" required="required">
+            <input class="item__text" id="password" type="password" placeholder="Введите пароль" required="required" autocomplete="new-password">
           </div>
 
           <div class="form__group form__item">
             <label for="psw-repeat"><b>Повторите пароль</b></label>
-            <input class="item__text" type="password" placeholder="Введите пароль еще раз" name="psw-repeat" required>
+            <input class="item__text" id="password-repeat" type="password" placeholder="Введите пароль еще раз" name="psw-repeat" required="required" autocomplete="new-password">
           </div>
 
           <div class="form__line form__item">
@@ -48,3 +48,5 @@
     </div>
   </div>
 </section>
+
+<script src="/scripts/auth/signup.js"></script>
