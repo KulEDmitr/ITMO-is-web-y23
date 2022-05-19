@@ -1,13 +1,27 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
+import { Session } from '../auth/session.decorator';
+import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
+import { AppService } from './app.service';
 
 @ApiExcludeController()
 @Controller()
 export class AppController {
-  @Get('auth')
-  @Render('pages/auth_form')
-  authForm() {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  @Render('pages/index1')
+  async root(@Session() session: SessionContainer) {
     return {
+      ...(await this.appService.getSession(session)),
+    };
+  }
+
+  @Get('signup')
+  @Render('pages/auth_form')
+  authForm(@Session() session: SessionContainer) {
+    return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
@@ -16,8 +30,9 @@ export class AppController {
 
   @Get('login')
   @Render('pages/login_form')
-  loginForm() {
+  loginForm(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
@@ -26,8 +41,9 @@ export class AppController {
 
   @Get('blog')
   @Render('pages/blog')
-  blog() {
+  blog(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="css/blog.css">' +
         '<link rel="stylesheet" href ="css/card.css">' +
@@ -37,8 +53,9 @@ export class AppController {
 
   @Get('jobs/id/:id')
   @Render('pages/edit_job_card')
-  job_card() {
+  job_card(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -48,8 +65,9 @@ export class AppController {
 
   @Get('jobs-list')
   @Render('pages/jobs')
-  async getJobs() {
+  async getJobs(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/grid.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">' +
@@ -60,8 +78,9 @@ export class AppController {
 
   @Get('create-job')
   @Render('pages/create_job_card')
-  async createJob() {
+  async createJob(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -71,8 +90,9 @@ export class AppController {
 
   @Get('/create-draft')
   @Render('pages/create_draft')
-  async createDraft() {
+  async createDraft(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -82,8 +102,9 @@ export class AppController {
 
   @Get('/posts/id/:id')
   @Render('pages/edit_draft')
-  EditDraft() {
+  EditDraft(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -93,14 +114,17 @@ export class AppController {
 
   @Get('different')
   @Render('pages/different')
-  different() {
-    return {};
+  different(@Session() session: SessionContainer) {
+    return {
+      ...this.appService.getSession(session),
+    };
   }
 
   @Get('form')
   @Render('pages/form')
-  form() {
+  form(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/todoForm.css">',
@@ -109,8 +133,9 @@ export class AppController {
 
   @Get('gallery')
   @Render('pages/gallery')
-  gallery() {
+  gallery(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles:
         '<!-- swiper -->' +
         '<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>' +
@@ -120,21 +145,26 @@ export class AppController {
 
   @Get('loaded_pictures')
   @Render('pages/loaded_pictures')
-  loaded_pictures() {
+  loaded_pictures(@Session() session: SessionContainer) {
     return {
+      ...this.appService.getSession(session),
       add_styles: '<link rel="stylesheet" href ="/css/loaded.css">',
     };
   }
 
   @Get('operation')
   @Render('pages/operation')
-  operation() {
-    return {};
+  operation(@Session() session: SessionContainer) {
+    return {
+      ...this.appService.getSession(session),
+    };
   }
 
   @Get('physics')
   @Render('pages/physics')
-  physics() {
-    return {};
+  physics(@Session() session: SessionContainer) {
+    return {
+      ...this.appService.getSession(session),
+    };
   }
 }
