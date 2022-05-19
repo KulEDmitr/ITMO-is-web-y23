@@ -43,4 +43,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(8)
   password: string;
+
+  @ApiProperty({
+    description: 'The unique identifier of the User in supertokens',
+    example: 'fa7a0841-b533-4478-95533-0fde890c3483',
+  })
+  superTokenId: string;
 }

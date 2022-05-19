@@ -32,9 +32,9 @@ export class UserService {
     return this.prisma.user.create({
       data: {
         login: data.login,
-        password: data.password,
         email: data.email,
         name: data.name,
+        superTokenId: data.superTokenId,
       },
     });
   }

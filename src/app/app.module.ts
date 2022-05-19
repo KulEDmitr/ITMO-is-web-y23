@@ -10,8 +10,6 @@ import { AppService } from './app.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { JobModule } from '../prisma/jobs/job.module';
 import { AuthModule } from '../auth/auth.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { TimerInterceptor } from '../timer.interceptor';
 
 @Module({
   imports: [
@@ -34,12 +32,6 @@ import { TimerInterceptor } from '../timer.interceptor';
     }),
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: TimerInterceptor,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

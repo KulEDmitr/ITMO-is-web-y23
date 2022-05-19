@@ -1,27 +1,24 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Session } from '../auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
-import { AppService } from './app.service';
 
 @ApiExcludeController()
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
   @Render('pages/index1')
-  async root(@Session() session: SessionContainer) {
+  async root(@Res() res) {
     return {
-      ...(await this.appService.getSession(session)),
+      is_auth: res.is_auth,
+      login: res.login,
     };
   }
 
   @Get('signup')
   @Render('pages/auth_form')
-  authForm(@Session() session: SessionContainer) {
+  authForm(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
@@ -30,9 +27,10 @@ export class AppController {
 
   @Get('login')
   @Render('pages/login_form')
-  loginForm(@Session() session: SessionContainer) {
+  loginForm(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
@@ -41,9 +39,10 @@ export class AppController {
 
   @Get('blog')
   @Render('pages/blog')
-  blog(@Session() session: SessionContainer) {
+  blog(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/blog.css">' +
         '<link rel="stylesheet" href ="css/card.css">' +
@@ -53,9 +52,10 @@ export class AppController {
 
   @Get('jobs/id/:id')
   @Render('pages/edit_job_card')
-  job_card(@Session() session: SessionContainer) {
+  job_card(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -65,9 +65,10 @@ export class AppController {
 
   @Get('jobs-list')
   @Render('pages/jobs')
-  async getJobs(@Session() session: SessionContainer) {
+  async getJobs(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/grid.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">' +
@@ -78,9 +79,10 @@ export class AppController {
 
   @Get('create-job')
   @Render('pages/create_job_card')
-  async createJob(@Session() session: SessionContainer) {
+  async createJob(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -90,9 +92,10 @@ export class AppController {
 
   @Get('/create-draft')
   @Render('pages/create_draft')
-  async createDraft(@Session() session: SessionContainer) {
+  async createDraft(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -102,9 +105,10 @@ export class AppController {
 
   @Get('/posts/id/:id')
   @Render('pages/edit_draft')
-  EditDraft(@Session() session: SessionContainer) {
+  EditDraft(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -114,17 +118,19 @@ export class AppController {
 
   @Get('different')
   @Render('pages/different')
-  different(@Session() session: SessionContainer) {
+  different(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
     };
   }
 
   @Get('form')
   @Render('pages/form')
-  form(@Session() session: SessionContainer) {
+  form(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/todoForm.css">',
@@ -133,9 +139,10 @@ export class AppController {
 
   @Get('gallery')
   @Render('pages/gallery')
-  gallery(@Session() session: SessionContainer) {
+  gallery(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles:
         '<!-- swiper -->' +
         '<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>' +
@@ -145,26 +152,29 @@ export class AppController {
 
   @Get('loaded_pictures')
   @Render('pages/loaded_pictures')
-  loaded_pictures(@Session() session: SessionContainer) {
+  loaded_pictures(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
       add_styles: '<link rel="stylesheet" href ="/css/loaded.css">',
     };
   }
 
   @Get('operation')
   @Render('pages/operation')
-  operation(@Session() session: SessionContainer) {
+  operation(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
     };
   }
 
   @Get('physics')
   @Render('pages/physics')
-  physics(@Session() session: SessionContainer) {
+  physics(@Res() res) {
     return {
-      ...this.appService.getSession(session),
+      is_auth: res.is_auth,
+      login: res.login,
     };
   }
 }
