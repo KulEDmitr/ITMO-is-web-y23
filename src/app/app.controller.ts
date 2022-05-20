@@ -1,48 +1,46 @@
-import { Controller, Get, Render, Res } from '@nestjs/common';
+import { Controller, Get, Render, Res, UseGuards } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
+import { Session } from '../auth/session.decorator';
+import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
+import { OptionalAuthGuard } from '../auth/auth.optional.quard';
 
 @ApiExcludeController()
 @Controller()
 export class AppController {
+  @UseGuards(OptionalAuthGuard)
   @Get()
   @Render('pages/index1')
-  async root(@Res() res) {
-    return {
-      is_auth: res.is_auth,
-      login: res.login,
-    };
+  async root(@Session() session: SessionContainer) {
+    return {};
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('signup')
   @Render('pages/auth_form')
-  authForm(@Res() res) {
+  authForm(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('login')
   @Render('pages/login_form')
-  loginForm(@Res() res) {
+  loginForm(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/form.css">' +
         '<link rel="stylesheet" href ="css/authForm.css">',
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('blog')
   @Render('pages/blog')
-  blog(@Res() res) {
+  blog(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="css/blog.css">' +
         '<link rel="stylesheet" href ="css/card.css">' +
@@ -50,12 +48,11 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('jobs/id/:id')
   @Render('pages/edit_job_card')
-  job_card(@Res() res) {
+  job_card(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -63,12 +60,11 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('jobs-list')
   @Render('pages/jobs')
-  async getJobs(@Res() res) {
+  async getJobs(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/grid.css">' +
         '<link rel="stylesheet" href ="/css/job_card.css">' +
@@ -77,12 +73,11 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('create-job')
   @Render('pages/create_job_card')
-  async createJob(@Res() res) {
+  async createJob(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -90,12 +85,11 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('/create-draft')
   @Render('pages/create_draft')
-  async createDraft(@Res() res) {
+  async createDraft(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -103,12 +97,11 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('/posts/id/:id')
   @Render('pages/edit_draft')
-  EditDraft(@Res() res) {
+  EditDraft(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/card.css">' +
@@ -116,33 +109,29 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('different')
   @Render('pages/different')
-  different(@Res() res) {
-    return {
-      is_auth: res.is_auth,
-      login: res.login,
-    };
+  different(@Session() session: SessionContainer) {
+    return {};
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('form')
   @Render('pages/form')
-  form(@Res() res) {
+  form(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +
         '<link rel="stylesheet" href ="/css/todoForm.css">',
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('gallery')
   @Render('pages/gallery')
-  gallery(@Res() res) {
+  gallery(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles:
         '<!-- swiper -->' +
         '<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>' +
@@ -150,31 +139,26 @@ export class AppController {
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('loaded_pictures')
   @Render('pages/loaded_pictures')
-  loaded_pictures(@Res() res) {
+  loaded_pictures(@Session() session: SessionContainer) {
     return {
-      is_auth: res.is_auth,
-      login: res.login,
       add_styles: '<link rel="stylesheet" href ="/css/loaded.css">',
     };
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('operation')
   @Render('pages/operation')
-  operation(@Res() res) {
-    return {
-      is_auth: res.is_auth,
-      login: res.login,
-    };
+  operation(@Session() session: SessionContainer) {
+    return {};
   }
 
+  @UseGuards(OptionalAuthGuard)
   @Get('physics')
   @Render('pages/physics')
-  physics(@Res() res) {
-    return {
-      is_auth: res.is_auth,
-      login: res.login,
-    };
+  physics(@Session() session: SessionContainer) {
+    return {};
   }
 }

@@ -16,6 +16,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaClientExceptionFilter } from './filters/prisma-client-exception.filter';
 import supertokens from 'supertokens-node';
 import { SupertokensExceptionFilter } from './auth/auth.filter';
+import { RenderInterceptor } from './auth/render.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -37,7 +38,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
 
-  app.useGlobalInterceptors(new TimerInterceptor());
+  app.useGlobalInterceptors(new TimerInterceptor(), new RenderInterceptor());
 
   app.useGlobalPipes(new ValidationPipe({
       transform: true,
@@ -54,6 +55,7 @@ async function bootstrap() {
     .setTitle('Simple blog')
     .setDescription('The nook-of-madness project API description')
     .setVersion('0.0.1')
+    .addCookieAuth()
     .build();
 
   const options: SwaggerDocumentOptions = {

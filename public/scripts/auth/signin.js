@@ -1,13 +1,15 @@
-console.log(window.location.origin);
+const hideSignContainer = () => {
+  let element1 = document.getElementById('loggedout_template');
+  let element2 = document.getElementById('loggedin_template');
+  if (element1) {
+    element1.hidden = true;
+  }
+  if (element2) {
+    element2.hidden = true;
+  }
+};
 
-let element1 = document.getElementById('loggedout_template');
-let element2 = document.getElementById('loggedin_template');
-if (element1) {
-  element1.hidden = true;
-}
-if (element2) {
-  element2.hidden = true;
-}
+hideSignContainer();
 
 const getSignInData = () => {
   return {
@@ -19,55 +21,45 @@ const getSignInData = () => {
 let signinForm = document.getElementById('signin_form');
 signinForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  let data = getSignInData();
-  console.log(data);
-
-  let spData = {
-    formFields: [
-      {
-        id: 'email',
-        value: data.email,
-      },
-      {
-        id: 'password',
-        value: data.password,
-      },
-    ],
-  };
-
   try {
     let data = getSignInData();
-    console.log(data);
-    _api
-      .signIn(data.email, data.password)
+    fetch('/auth/signIn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        formFields: [
+          {
+            id: 'email',
+            value: data.email,
+          },
+          {
+            id: 'password',
+            value: data.password,
+          },
+        ],
+      }),
+    })
       .then((response) => {
-        console.log('signin');
         if (response.ok) {
-          console.log('signin');
-          alert('Вход выполнен успешно');
-          window.location.href = '/';
+          return response.json();
         } else {
-          console.error('Данные введены не верно');
-          alert('Данные введены не верно');
-          response.formFields.forEach((item) => {
-            alert(item.error);
-          });
-          console.log('all done');
-          let i = 0;
-          while (response.formFields[String(i)] !== undefined) {
-            alert(response.formFields[String(i)].error);
-            i++;
-          }
-          return response.formFields.json();
+          throw new Error(`Failed to sign in user: ${response.statusText}`);
         }
       })
       .then((response) => {
-        data.superTokenId = response.user.id;
-        console.log(data);
-        //window.location.href = '/';
-        createUser(data);
+        if (response.status === 'OK') {
+          alert('Вход выполнен успешно');
+          window.location.href = '/';
+        } else {
+          alert('Данные введены не верно');
+          throw new Error('wrong data for sign in');
+        }
       });
   } catch (e) {
-    alert(e.toString());
+    console.error(e);
   }
 });
