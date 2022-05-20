@@ -4,10 +4,6 @@ function error() {
   };
 }
 
-const setServerTime = (data) => {
-  document.getElementById('server__time').textContent = data.server_time;
-};
-
 const cleanForm = () => {
   document.getElementById('position').value = '';
   document.getElementById('place').value = '';

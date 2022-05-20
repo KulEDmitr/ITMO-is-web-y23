@@ -1,9 +1,5 @@
 let container = document.getElementById('loaded__jobs__wrapper');
 
-const setServerTime = (data) => {
-  document.getElementById('server__time').textContent = data.server_time;
-};
-
 const createTemplate = (data) => {
   let template = document
     .getElementById('template__loaded__job')

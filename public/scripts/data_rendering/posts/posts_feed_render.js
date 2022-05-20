@@ -1,9 +1,5 @@
 let container = document.getElementById('posts__wrapper');
 
-const setServerTime = (data) => {
-  document.getElementById('server__time').textContent = data.server_time;
-};
-
 let lastPostId = undefined;
 const createTemplate = (data) => {
   lastPostId = data.id;

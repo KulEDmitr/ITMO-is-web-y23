@@ -1,6 +1,5 @@
 let start_time = new Date().getTime();
 
-
 // const checkSession = () => {
 //   fetch('/auth/session')
 //     .then((response) => {
@@ -31,4 +30,8 @@ window.onload = () => {
       refs[i].classList.add('active');
     }
   }
+};
+
+const setServerTime = (data) => {
+  document.getElementById('server__time').textContent = data.server_time;
 };
