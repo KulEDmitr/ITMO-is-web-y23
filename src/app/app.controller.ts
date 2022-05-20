@@ -3,6 +3,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { Session } from '../auth/session.decorator';
 import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
 import { OptionalAuthGuard } from '../auth/auth.optional.quard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiExcludeController()
 @Controller()
@@ -48,7 +49,7 @@ export class AppController {
     };
   }
 
-  @UseGuards(OptionalAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('jobs/id/:id')
   @Render('pages/edit_job_card')
   job_card(@Session() session: SessionContainer) {
@@ -60,7 +61,7 @@ export class AppController {
     };
   }
 
-  @UseGuards(OptionalAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('jobs-list')
   @Render('pages/jobs')
   async getJobs(@Session() session: SessionContainer) {
@@ -73,7 +74,7 @@ export class AppController {
     };
   }
 
-  @UseGuards(OptionalAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('create-job')
   @Render('pages/create_job_card')
   async createJob(@Session() session: SessionContainer) {
@@ -85,7 +86,7 @@ export class AppController {
     };
   }
 
-  @UseGuards(OptionalAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('/create-draft')
   @Render('pages/create_draft')
   async createDraft(@Session() session: SessionContainer) {
@@ -97,7 +98,7 @@ export class AppController {
     };
   }
 
-  @UseGuards(OptionalAuthGuard)
+  @UseGuards(AuthGuard)
   @Get('/posts/id/:id')
   @Render('pages/edit_draft')
   EditDraft(@Session() session: SessionContainer) {
