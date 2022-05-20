@@ -8,6 +8,7 @@ import {
   Delete,
   UseFilters,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
@@ -21,6 +22,7 @@ import {
   ApiCreatedResponse,
   ApiConflictResponse,
   ApiQuery,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 
 import { PostService } from './post.service';
@@ -29,6 +31,7 @@ import { CreatePostDto } from './models/create-post.dto';
 import { UpdatePostDto } from './models/update-post.dto';
 import { PostEntity } from './models/post.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { AuthGuard } from '../../auth/auth.guard';
 @ApiTags('posts')
 @Controller('posts')
 export class PostController {
@@ -47,6 +50,8 @@ export class PostController {
     description: 'Some of given parameters should be unique but they are not',
   })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Post()
   async createDraft(@Body() data: CreatePostDto): Promise<PostEntity> {
     console.log(data);
@@ -170,6 +175,8 @@ export class PostController {
     example: 1,
   })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Put(':id')
   async editPostById(
     @Param('id') id: number,
@@ -194,6 +201,8 @@ export class PostController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Post not found' })
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deletePostById(@Param('id') id: number): Promise<PostEntity> {
     return new PostEntity(await this.postService.deletePostById(id));

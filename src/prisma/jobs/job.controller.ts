@@ -7,8 +7,8 @@ import {
   Put,
   Delete,
   UseFilters,
-  Res,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
@@ -23,6 +23,7 @@ import {
   ApiConflictResponse,
   ApiExcludeEndpoint,
   ApiQuery,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 
 import { JobService } from './job.service';
@@ -31,7 +32,7 @@ import { CreateJobDto } from './models/create-job.dto';
 import { UpdateJobDto } from './models/update-job.dto';
 import { JobEntity } from './models/job.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
-import { PostEntity } from '../posts/models/post.entity';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @ApiTags('jobs')
 @Controller()
@@ -51,6 +52,8 @@ export class JobController {
     description: 'Some of given parameters should be unique but they are not',
   })
   @UseFilters(RecordExistedFilter)
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Post('jobs')
   async createJobPlace(@Body() data: CreateJobDto): Promise<JobEntity> {
     return new JobEntity(await this.jobService.createJob(data));
@@ -72,6 +75,8 @@ export class JobController {
     description: 'Id of job place that need to be found',
     example: 1,
   })
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Get('jobs/:id')
   async getJobById(@Param('id') id: number): Promise<JobEntity> {
     return new JobEntity(await this.jobService.findJobById(id));
@@ -96,6 +101,8 @@ export class JobController {
     description: 'count of job cards that need to be found',
     example: 5,
   })
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Get('jobs')
   async getJobs(@Query('take') take?: number) {
     const jobs = await this.jobService.jobs({ startDate: 'desc' }, 0, take);
@@ -129,6 +136,8 @@ export class JobController {
     description: 'count of cards that need to be skipped',
     example: 1,
   })
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Get('jobs/page/with_query')
   async getPage(@Query('take') take?: number, @Query('skip') skip?: number) {
     const jobs = await this.jobService.jobs({ id: 'desc' }, skip, take);
@@ -155,6 +164,8 @@ export class JobController {
     example: 1,
   })
   @UseFilters(RecordExistedFilter)
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Put('jobs/:id')
   async editJobPlaceById(
     @Param('id') id: number,
@@ -179,17 +190,19 @@ export class JobController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Job place not found' })
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Delete('jobs/:id')
   async deleteJobPlaceById(@Param('id') id: number): Promise<JobEntity> {
     return new JobEntity(await this.jobService.deleteJobById(id));
   }
 
   @ApiExcludeEndpoint()
-  @Get()
-  async getNJobs(@Res() res) {
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
+  @Get('/main_jobs')
+  async getNJobs() {
     const jobs = await this.jobService.jobs({ startDate: 'desc' }, 0, 3);
-    res.render('pages/index1', {
-      jobPlace: jobs.map((job) => new JobEntity(job)),
-    });
+    return { jobs: jobs.map((job) => new JobEntity(job)) };
   }
 }

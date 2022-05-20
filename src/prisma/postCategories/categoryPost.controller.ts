@@ -6,6 +6,7 @@ import {
   Get,
   Query,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
@@ -19,6 +20,7 @@ import {
   ApiQuery,
   ApiCreatedResponse,
   ApiConflictResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 
 import { CategoryPostService } from './categoryPost.service';
@@ -27,6 +29,7 @@ import { CreateCategoryPostDto } from './models/create-categoryPost.dto';
 import { CategoryPostEntity } from './models/categoryPost.entity';
 import { PostEntity } from '../posts/models/post.entity';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @ApiTags('postCategories')
 @Controller('post-categories')
@@ -106,6 +109,8 @@ export class CategoryPostController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Get(':categoryId/posts')
   async getPostsByCategoryId(
     @Param('categoryId') categoryId: number,

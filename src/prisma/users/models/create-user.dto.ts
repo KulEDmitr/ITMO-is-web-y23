@@ -31,18 +31,10 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(3)
   @MaxLength(20)
   login: string;
 
-  @ApiProperty({
-    description: 'The password of the User. Should be longer or equal than 8 characters',
-    example: 'jkljlfu7lk86',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8)
-  password: string;
 
   @ApiProperty({
     description: 'The unique identifier of the User in supertokens',

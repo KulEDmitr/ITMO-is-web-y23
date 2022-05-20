@@ -14,6 +14,10 @@ export class UserService {
     return this.user({ id: id });
   }
 
+  async getUserBySuperTokensId(id: string): Promise<User | null> {
+    return this.user({ superTokenId: id });
+  }
+
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {

@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
@@ -19,6 +20,7 @@ import {
   ApiNotFoundResponse,
   ApiCreatedResponse,
   ApiConflictResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 
 import { PictureService } from './picture.service';
@@ -27,6 +29,7 @@ import { CreatePictureDto } from './models/create-picture.dto';
 import { PictureEntity } from './models/picture.entity';
 import { UpdatePictureDto } from './models/update-picture.dto';
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @ApiTags('pictures')
 @Controller('pictures')
@@ -46,6 +49,8 @@ export class PictureController {
     description: 'Some of given parameters should be unique but they are not',
   })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Post()
   async createPicture(@Body() data: CreatePictureDto): Promise<PictureEntity> {
     return new PictureEntity(await this.pictureService.createPicture(data));
@@ -109,6 +114,8 @@ export class PictureController {
     example: 1,
   })
   @UseFilters(RecordExistedFilter)
+  @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @Put(':id')
   async editPictureById(
     @Param('id') id: number,
@@ -135,6 +142,8 @@ export class PictureController {
     description: 'Id of picture that need to be found',
     example: 1,
   })
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deletePictureById(@Param('id') id: number): Promise<PictureEntity> {
     return new PictureEntity(await this.pictureService.deletePictureById(id));

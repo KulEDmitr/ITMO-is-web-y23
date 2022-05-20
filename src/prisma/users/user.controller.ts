@@ -7,11 +7,13 @@ import {
   Put,
   Delete,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -31,6 +33,7 @@ import { CreateUserDto } from './models/create-user.dto';
 import { UpdateUserDto } from './models/update-user.dto';
 
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -76,6 +79,27 @@ export class UserController {
     return new UserEntity(await this.userService.getUserById(id));
   }
 
+  @ApiOperation({ summary: 'Get user by supertokens id' })
+  @ApiOkResponse({
+    type: UserEntity,
+    description: 'User found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'supertokens Id of user that need to be found',
+    example: 'b9bb4aff-95a2-4761-af7d-ff490e543819',
+  })
+  @Get('/supertokens/:id')
+  async getUserBySuperTokensId(@Param('id') id: string): Promise<UserEntity> {
+    return new UserEntity(await this.userService.getUserBySuperTokensId(id));
+  }
+
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({
     type: UserEntity,
@@ -109,6 +133,8 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Pictures not found' })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Get(':ownerId/gallery')
   async getPictures(
     @Param('ownerId') ownerId: string,
@@ -155,6 +181,8 @@ export class UserController {
     example: '1',
   })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Get(':authorId/drafts')
   async getDrafts(@Param('authorId') authorId: string): Promise<PostEntity[]> {
     const posts = await this.userService.getUnpublishedPostsByAuthorId(
@@ -204,6 +232,8 @@ export class UserController {
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Put(':id')
   async editUserById(
     @Param('id') id: string,
@@ -228,6 +258,8 @@ export class UserController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<UserEntity> {
     return new UserEntity(await this.userService.deleteUserById(id));
