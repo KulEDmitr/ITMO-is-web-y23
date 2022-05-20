@@ -22,12 +22,12 @@ import { AuthModule } from '../auth/auth.module';
     CategoryPictureModule,
     CategoryPostModule,
     AuthModule.forRoot({
-      connectionURI: new ConfigService().get('CONNECTION_URI'),
-      apiKey: new ConfigService().get('API_KEY'),
+      connectionURI: process.env.CONNECTION_URI,
+      apiKey: process.env.API_KEY,
       appInfo: {
-        appName: new ConfigService().get('APP_NAME'),
-        apiDomain: new ConfigService().get('APP_DOMAIN'),
-        websiteDomain: new ConfigService().get('WEBSITE_DOMAIN'),
+        appName: process.env.APP_NAME,
+        apiDomain: process.env.APP_DOMAIN,
+        websiteDomain: process.env.WEBSITE_DOMAIN,
       },
     }),
   ],
