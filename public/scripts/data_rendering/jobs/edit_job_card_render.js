@@ -1,12 +1,6 @@
 let url_id = window.location.href.split('/').pop();
 let url = '/jobs/' + url_id;
 
-function error() {
-  return {
-    position: '⚠ Что-то пошло не так',
-  };
-}
-
 const createTemplate = (data) => {
   setCard(data);
   setForm(data);
@@ -65,16 +59,15 @@ fetch(url, { method: 'GET' })
   .then((response) => {
     if (response.ok) {
       return response.json();
-    } else {
-      return error();
     }
+    throw new Error(response.status);
   })
   .then((data) => {
     setServerTime(data);
     createTemplate(data);
   })
-  .catch((data) => {
-    alert(data.toString());
+  .catch(() => {
+    window.location.href = '/signup';
   });
 
 const readData = () => {
@@ -99,16 +92,15 @@ editJobForm.addEventListener('submit', (event) => {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        return error();
       }
+      throw new Error(response.status);
     })
     .then((data) => {
       setServerTime(data);
       setCard(data);
     })
-    .catch((data) => {
-      alert(data.toString());
+    .catch(() => {
+      window.location.href = '/signup';
     });
 });
 
@@ -121,9 +113,8 @@ document.getElementById('delete').onclick = () => {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        return error();
       }
+      throw new Error(response.status);
     })
     .then((data) => {
       setServerTime(data);
@@ -132,5 +123,6 @@ document.getElementById('delete').onclick = () => {
     })
     .catch((data) => {
       alert(data.toString());
+      window.location.href = '/signup';
     });
 };

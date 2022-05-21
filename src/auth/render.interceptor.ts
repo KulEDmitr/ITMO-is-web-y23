@@ -27,7 +27,7 @@ export class RenderInterceptor implements NestInterceptor {
         const user = await new UserController(
           new UserService(new PrismaService()),
         ).getUserBySuperTokensId(userInfo.id);
-        
+
         is_auth = true;
         login = user.login;
       }

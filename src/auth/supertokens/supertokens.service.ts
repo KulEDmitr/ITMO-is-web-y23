@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
@@ -15,7 +15,18 @@ export class SupertokensService {
         connectionURI: config.connectionURI,
         apiKey: config.apiKey,
       },
-      recipeList: [EmailPassword.init(), Session.init()],
+      recipeList: [
+        EmailPassword.init(),
+        Session.init({
+          errorHandlers: {
+            onUnauthorised: async (message, request, response) => {
+              throw new UnauthorizedException(
+                'You are not authorized for this action.',
+              );
+            },
+          },
+        }),
+      ],
     });
   }
 }

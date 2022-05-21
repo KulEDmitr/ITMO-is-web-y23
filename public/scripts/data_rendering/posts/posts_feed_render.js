@@ -42,9 +42,8 @@ const getData = (url, params) => {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        return error();
       }
+      throw new Error(response.status);
     })
     .then((data) => {
       setServerTime(data);

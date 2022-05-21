@@ -17,7 +17,7 @@ export class AppController {
 
   @UseGuards(OptionalAuthGuard)
   @Get('signup')
-  @Render('pages/auth_form')
+  @Render('pages/auth/auth_form')
   authForm(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -28,7 +28,7 @@ export class AppController {
 
   @UseGuards(OptionalAuthGuard)
   @Get('login')
-  @Render('pages/login_form')
+  @Render('pages/auth/login_form')
   loginForm(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -39,7 +39,7 @@ export class AppController {
 
   @UseGuards(OptionalAuthGuard)
   @Get('blog')
-  @Render('pages/blog')
+  @Render('pages/posts/blog')
   blog(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -51,7 +51,7 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Get('jobs/id/:id')
-  @Render('pages/edit_job_card')
+  @Render('pages/jobs/edit_job_card')
   job_card(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -61,9 +61,9 @@ export class AppController {
     };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(OptionalAuthGuard)
   @Get('jobs-list')
-  @Render('pages/jobs')
+  @Render('pages/jobs/jobs')
   async getJobs(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -76,7 +76,7 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Get('create-job')
-  @Render('pages/create_job_card')
+  @Render('pages/jobs/create_job_card')
   async createJob(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -87,8 +87,8 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/create-draft')
-  @Render('pages/create_draft')
+  @Get('create-draft')
+  @Render('pages/posts/create_draft')
   async createDraft(@Session() session: SessionContainer) {
     return {
       add_styles:
@@ -98,10 +98,10 @@ export class AppController {
     };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(OptionalAuthGuard)
   @Get('/posts/id/:id')
-  @Render('pages/edit_draft')
-  EditDraft(@Session() session: SessionContainer) {
+  @Render('pages/posts/edit_draft')
+  async editDraft(@Session() session: SessionContainer) {
     return {
       add_styles:
         '<link rel="stylesheet" href ="/css/form.css">' +

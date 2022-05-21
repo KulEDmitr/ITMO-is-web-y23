@@ -79,6 +79,27 @@ export class UserController {
     return new UserEntity(await this.userService.getUserById(id));
   }
 
+  @ApiOperation({ summary: 'Get user by login' })
+  @ApiOkResponse({
+    type: UserEntity,
+    description: 'User found',
+  })
+  @ApiBadRequestResponse({
+    description: 'The request could not be understood due to malformed syntax.',
+  })
+  @ApiForbiddenResponse({ description: 'Access denied' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiParam({
+    name: 'login',
+    type: 'string',
+    description: 'login of user that need to be found. from 3 to 20 symbols',
+    example: 'janeDoe',
+  })
+  @Get('login/:login')
+  async getUserByLogin(@Param('login') login: string): Promise<UserEntity> {
+    return new UserEntity(await this.userService.getUserByLogin(login));
+  }
+
   @ApiOperation({ summary: 'Get user by supertokens id' })
   @ApiOkResponse({
     type: UserEntity,

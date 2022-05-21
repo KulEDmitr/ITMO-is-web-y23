@@ -17,12 +17,6 @@ const createTemplate = (data) => {
   return template;
 };
 
-function error() {
-  return {
-    position: '⚠ Что-то пошло не так',
-  };
-}
-
 let lastJob = 0;
 const checkData = (data) => {
   lastJob += data.jobs.length;
@@ -42,9 +36,8 @@ const getData = (url, params) => {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        return error();
       }
+      throw new Error(response.statusText);
     })
     .then((data) => {
       setServerTime(data);
@@ -60,11 +53,9 @@ const getData = (url, params) => {
       checkData(data, params);
     })
     .catch(() => {
-      alert(error());
+      window.location.href = '/signup';
     });
 };
-
-getData('/jobs', { take: 3 });
 
 const getParams = () => {
   return {
@@ -72,6 +63,8 @@ const getParams = () => {
     skip: lastJob,
   };
 };
+
+getData('/jobs/page/with_query', getParams());
 
 document.getElementById('load_more').onclick = () => {
   getData('/jobs/page/with_query', getParams());

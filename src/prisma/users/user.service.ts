@@ -147,4 +147,8 @@ export class UserService {
       throw new NotFoundException('User with given data do not exist');
     }
   }
+
+  async getUserByLogin(login: string): Promise<User | null> {
+    return this.user({ login: login });
+  }
 }
