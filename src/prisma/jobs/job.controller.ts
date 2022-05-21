@@ -8,7 +8,7 @@ import {
   Delete,
   UseFilters,
   Query,
-  UseGuards,
+  UseGuards, UseInterceptors,
 } from '@nestjs/common';
 
 import {
@@ -23,7 +23,7 @@ import {
   ApiConflictResponse,
   ApiExcludeEndpoint,
   ApiQuery,
-  ApiCookieAuth,
+  ApiCookieAuth, ApiProduces,
 } from '@nestjs/swagger';
 
 import { JobService } from './job.service';
@@ -51,6 +51,7 @@ export class JobController {
   @ApiConflictResponse({
     description: 'Some of given parameters should be unique but they are not',
   })
+  @ApiProduces('application/xml')
   @UseFilters(RecordExistedFilter)
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
@@ -75,6 +76,7 @@ export class JobController {
     description: 'Id of job place that need to be found',
     example: 1,
   })
+  @ApiProduces('application/xml')
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
   @Get('jobs/:id')
@@ -101,6 +103,7 @@ export class JobController {
     description: 'count of job cards that need to be found',
     example: 5,
   })
+  @ApiProduces('application/xml')
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
   @Get('jobs')
@@ -136,6 +139,7 @@ export class JobController {
     description: 'count of cards that need to be skipped',
     example: 1,
   })
+  @ApiProduces('application/xml')
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
   @Get('jobs/page/with_query')
@@ -163,6 +167,7 @@ export class JobController {
     description: 'Id of job that need to be edited',
     example: 1,
   })
+  @ApiProduces('application/xml')
   @UseFilters(RecordExistedFilter)
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
@@ -190,6 +195,7 @@ export class JobController {
   })
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Job place not found' })
+  @ApiProduces('application/xml')
   @UseGuards(AuthGuard)
   @ApiCookieAuth()
   @Delete('jobs/:id')

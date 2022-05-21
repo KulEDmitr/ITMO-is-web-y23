@@ -17,6 +17,7 @@ import { PrismaClientExceptionFilter } from './filters/prisma-client-exception.f
 import supertokens from 'supertokens-node';
 import { SupertokensExceptionFilter } from './auth/auth.filter';
 import { RenderInterceptor } from './auth/render.interceptor';
+import { TypesInterceptor } from './types.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -38,7 +39,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
 
-  app.useGlobalInterceptors(new TimerInterceptor(), new RenderInterceptor());
+  app.useGlobalInterceptors(
+    new TypesInterceptor(),
+    new TimerInterceptor(),
+    new RenderInterceptor(),
+  );
 
   app.useGlobalPipes(new ValidationPipe({
       transform: true,
