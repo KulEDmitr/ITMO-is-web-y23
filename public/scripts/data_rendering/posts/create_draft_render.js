@@ -40,6 +40,7 @@ createPostForm.addEventListener('submit', async (event) => {
     .then((data) => {
       setServerTime(data);
       alert('post successfully added');
+      handleSubmitNewPost(data);
       window.location.href = 'posts/id/' + data.id;
     })
     .catch((data) => {

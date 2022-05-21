@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { PictureModule } from '../prisma/pictures/picture.module';
 import { PostModule } from '../prisma/posts/post.module';
 import { UserModule } from '../prisma/users/user.module';
@@ -10,6 +10,8 @@ import { AppService } from './app.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { JobModule } from '../prisma/jobs/job.module';
 import { AuthModule } from '../auth/auth.module';
+import { PostsGateway } from '../post.gateway/post.gateway';
+import { EventsModule } from '../post.gateway/post.gateway.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { AuthModule } from '../auth/auth.module';
     PictureModule,
     CategoryPictureModule,
     CategoryPostModule,
+    EventsModule,
     AuthModule.forRoot({
       connectionURI: process.env.CONNECTION_URI,
       apiKey: process.env.API_KEY,
@@ -32,6 +35,6 @@ import { AuthModule } from '../auth/auth.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PostsGateway],
 })
 export class AppModule {}
