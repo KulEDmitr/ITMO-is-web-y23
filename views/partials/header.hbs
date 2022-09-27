@@ -15,11 +15,10 @@
         <a class="link nav__link" href="/blog">Блог</a>
       </nav>
 
-
       {{#if is_auth}}
-        {{> logout }}
-      {{else}}
         {{> login }}
+      {{else}}
+        {{> logout }}
       {{/if}}
 
     </div>

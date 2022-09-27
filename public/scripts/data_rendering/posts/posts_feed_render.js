@@ -1,9 +1,5 @@
 let container = document.getElementById('posts__wrapper');
 
-const setServerTime = (data) => {
-  document.getElementById('server__time').textContent = data.server_time;
-};
-
 let lastPostId = undefined;
 const createTemplate = (data) => {
   lastPostId = data.id;
@@ -46,9 +42,8 @@ const getData = (url, params) => {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        return error();
       }
+      throw new Error(response.status);
     })
     .then((data) => {
       setServerTime(data);

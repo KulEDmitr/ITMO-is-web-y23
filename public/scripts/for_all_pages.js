@@ -12,3 +12,7 @@ window.onload = () => {
     }
   }
 };
+
+const setServerTime = (data) => {
+  document.getElementById('server__time').textContent = data.server_time;
+};

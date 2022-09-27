@@ -14,6 +14,10 @@ export class UserService {
     return this.user({ id: id });
   }
 
+  async getUserBySuperTokensId(id: string): Promise<User | null> {
+    return this.user({ superTokenId: id });
+  }
+
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
@@ -32,9 +36,9 @@ export class UserService {
     return this.prisma.user.create({
       data: {
         login: data.login,
-        password: data.password,
         email: data.email,
         name: data.name,
+        superTokenId: data.superTokenId,
       },
     });
   }
@@ -142,5 +146,9 @@ export class UserService {
     if (exist && user == null) {
       throw new NotFoundException('User with given data do not exist');
     }
+  }
+
+  async getUserByLogin(login: string): Promise<User | null> {
+    return this.user({ login: login });
   }
 }

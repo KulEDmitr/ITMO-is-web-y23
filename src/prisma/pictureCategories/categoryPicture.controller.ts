@@ -6,6 +6,7 @@ import {
   Get,
   Query,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 
 import {
@@ -19,6 +20,7 @@ import {
   ApiQuery,
   ApiCreatedResponse,
   ApiConflictResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 
 import { CategoryPictureService } from './categoryPicture.service';
@@ -28,6 +30,7 @@ import { CategoryPictureEntity } from './models/categoryPicture.entity';
 import { PictureEntity } from '../pictures/models/picture.entity';
 
 import { RecordExistedFilter } from '../../filters/record-existed.filter';
+import { AuthGuard } from '../../auth/auth.guard';
 
 @ApiTags('pictureCategories')
 @Controller('picture-categories')
@@ -100,6 +103,8 @@ export class CategoryPictureController {
   @ApiForbiddenResponse({ description: 'Access denied' })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @UseFilters(RecordExistedFilter)
+  @ApiCookieAuth()
+  @UseGuards(AuthGuard)
   @Get(':categoryId/pictures')
   async getPicturesByCategoryId(
     @Param('categoryId') categoryId: number,

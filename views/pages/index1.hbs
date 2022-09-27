@@ -68,31 +68,27 @@
         <h2 class="section__title">Должности</h2>
       </div>
 
-      <div class="row jobs__row">
-        {{#each jobPlace}}
+      <div class="row jobs__row" id="jobs__row">
+        <template id="template__loaded__job">
           <div class="card job__card">
-            <a class="link get_job" href="/jobs/id/{{id}}">
+            <a class="link get_job" id="job__href" href="">
               <div class="job__header">
-                <h3 class="job__position">{{position}}</h3>
+                <h3 class="job__position" id="job__position"></h3>
               </div>
 
-              <div class="job__place">{{place}}</div>
+              <div class="job__place" id="job__place"></div>
               <div class="job__time">
-                <span>{{startDate}}</span> -
-                {{#if endDate}}
-                  <span>{{endDate}}</span>
-                {{else}}
-                  <span>now</span>
-                {{/if}}
+                <span id="job__start_time"></span> -
+                <span id="job__end_time"></span>
               </div>
             </a>
           </div>
-        {{/each}}
+        </template>
       </div>
 
       <div class="jobs__footer">
         <a href="" class="link jobs__footer__link">Посмотреть резюме</a>
-        <a href="/jobs-list" class="link jobs__footer__link">Больше проектов</a>
+        <a href="/jobs-list" class="link jobs__footer__link">Места работы</a>
       </div>
     </div>
   </div>

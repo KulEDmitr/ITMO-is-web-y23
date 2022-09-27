@@ -635,3 +635,9 @@ footer {
         z-index: 2;
     }
 }
+
+.centered {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
